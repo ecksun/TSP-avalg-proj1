@@ -1,10 +1,10 @@
-<pre>
 <h1>Travelling Salesperson 2D</h1>
-
+<pre>
 Problem id: tsp
 Time limits: C/C++ - 3 seconds, Java - 4 seconds
 Memory limit: 32 MB
 Problem statistics
+</pre>
 <h2>Input</h2>
 
 Your program should take as input a single TSP instance. It will be run several times, once for every test case. The time limit is per test case.
@@ -22,7 +22,7 @@ Let Opt be the length of an optimal tour, Val be the length of the tour found by
 The score on a test case is 0.02x. Thus, if your tour is optimal, you will get 1 point on this test case. If your score is halfway between Naive and Opt, you get roughly 0.14 points. The total score of your submission is the sum of your score over all test cases, rounded to the nearest integer. There will be a total of 50 test cases. Thus, an implementation of the algorithm below should give a score of at least 1 (it will get 0.02 points on most test cases, and 1.0 points on some easy cases where it manages to find an optimal solution).
 
 The algorithm giving the value Naive is as follows:
-
+<pre>
 GreedyTour
 tour[0] = 0
 used[0] = true
@@ -34,9 +34,10 @@ best = j
 tour[i] = best
 used[best] = true
 return tour
+</pre>
 
 <h2>Sample Input</h2>
-
+<pre>
 10
 95.0129 61.5432
 23.1139 79.1937
@@ -48,9 +49,9 @@ return tour
 1.8504 91.6904
 82.1407 41.0270
 44.4703 89.3650
-
+</pre>
 <h2>Sample Output</h2>
-
+<pre>
 0
 8
 5
@@ -61,6 +62,5 @@ return tour
 2
 1
 7
-
-This is the tour found by the algorithm GreedyTour. The length of the tour is 323.
 </pre>
+This is the tour found by the algorithm GreedyTour. The length of the tour is 323.
