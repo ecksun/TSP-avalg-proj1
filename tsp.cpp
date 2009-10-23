@@ -44,6 +44,15 @@ void swap(int x, int y, int  path[]) {
     path[y] = tmp;
 }
 
+
+void reverse(int a, int b, int path[]) {
+    while (b-a > 1) {
+        swap(a,b, path);
+        a++;
+        b--;
+    }
+}
+
 // using namespace std;
 
 int main() {
@@ -71,20 +80,20 @@ int main() {
 
     // 2-opt, i hope
     for (int i = 0; i < numNodes-3; i++) {
-        for (int n = i; n < numNodes-3; i++) {
-
-            // if (distance(*nodes[path[i+0]], *nodes[path[i+1]]) + distance(*nodes[path[i+2]], *nodes[path[i+3]]) >
-                    // distance(*nodes[path[i+0]], *nodes[path[i+2]]) + distance(*nodes[path[i+1]], *nodes[path[i+3]]))
-
+        for (int n = i; n < numNodes-3; n++) {
+            if (distance(*nodes[path[i+0]], *nodes[path[i+1]]) + distance(*nodes[path[n+0]], *nodes[path[n+1]]) >
+                    distance(*nodes[path[i+1]], *nodes[path[n+0]]) + distance(*nodes[path[i+0]], *nodes[path[n+1]])) {
+                reverse(i, n, path);
+                // swap(i, i+1, path);
+            }
         }
     }
-}
 
-// output result
-for (int i = 0; i < numNodes; i++) {
-    std::cout << path[i] << std::endl;
-}
-std::cerr << "tour length:\t" << pathLength(nodes, path, numNodes) << std::endl;
+    // output result
+    for (int i = 0; i < numNodes; i++) {
+        std::cout << path[i] << std::endl;
+    }
+    std::cerr << "tour length:\t" << pathLength(nodes, path, numNodes) << std::endl;
 
 }
 
