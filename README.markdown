@@ -1,3 +1,4 @@
+<pre>
 <h1>Travelling Salesperson 2D</h1>
 
 Problem id: tsp
@@ -62,3 +63,4 @@ return tour
 7
 
 This is the tour found by the algorithm GreedyTour. The length of the tour is 323.
+</pre>
