@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <stdlib.h>
 
 #define DEBUG 1
 
@@ -68,12 +69,14 @@ int main() {
     scanf("%d", &numNodes);
     // std::cerr << "numNodes:\t" << numNodes << std::endl;
     node * nodes[numNodes];
+    int checked[numNodes];
 
     float x,y;
     for (int i = 0; i < numNodes; i++) {
         scanf("%f", &x);
         scanf("%f", &y);
         nodes[i] = new node(x,y);
+        checked[i] = false;
     }
 
     // testa något greedy
@@ -85,6 +88,11 @@ int main() {
     for (int i = 0; i < numNodes; i++) {
         path[i] = i;
     }
+
+
+    // Random start
+
+    std::cout << rand() << std::endl;
 
     // 2-opt, i hope
     for (int i = 0; i < numNodes-1; i++) {
