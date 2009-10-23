@@ -1,6 +1,5 @@
 #include <iostream>
 #include <math.h>
-#include <stdlib.h>
 
 #define DEBUG 1
 
@@ -69,14 +68,14 @@ int main() {
     scanf("%d", &numNodes);
     // std::cerr << "numNodes:\t" << numNodes << std::endl;
     node * nodes[numNodes];
-    int checked[numNodes];
+    int used[numNodes];
 
     float x,y;
     for (int i = 0; i < numNodes; i++) {
         scanf("%f", &x);
         scanf("%f", &y);
         nodes[i] = new node(x,y);
-        checked[i] = false;
+        used[i] = false;
     }
 
     // testa något greedy
@@ -84,15 +83,30 @@ int main() {
 
     int path[numNodes];
 
-    // just some path
-    for (int i = 0; i < numNodes; i++) {
-        path[i] = i;
+    path[0] = 0;
+    used[0] = true;
+    int best;
+    // greedy
+    for (int i = 1; i < numNodes; i++) {
+        best = -1;
+        for (int j = 0; j < numNodes; j++) {
+            if (!used[j] && (best == -1 || distance(*nodes[path[i-1]], *nodes[j]) < distance(*nodes[path[i-1]], *nodes[best]))) {
+                best = j;
+            }
+        }
+        path[i] = best;
+        used[best] = true;
     }
+
+    // just some path
+    // for (int i = 0; i < numNodes; i++) {
+        // path[i] = i;
+    // }
 
 
     // Random start
 
-    std::cout << rand() << std::endl;
+    // std::cout << rand() << std::endl;
 
     // 2-opt, i hope
     for (int i = 0; i < numNodes-1; i++) {
