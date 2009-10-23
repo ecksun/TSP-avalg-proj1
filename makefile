@@ -5,7 +5,7 @@ clean:
 	rm -f *.h.gch a.out
 
 tsp:
-	g++ tsp.cpp
+	g++ -g -Wall tsp.cpp
 
 run:
 	./a.out
