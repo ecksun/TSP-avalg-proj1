@@ -7,8 +7,8 @@ clean:
 tsp:
 	g++ -g -Wall tsp.cpp
 
-run:
-	./a.out
+run: all
+	./a.out < example.output
 
 
 submit: clean tsp
