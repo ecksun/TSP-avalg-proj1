@@ -1,5 +1,4 @@
 <h1>Notes</h1>
-Vi borde generera en hel hög testfall så man kan se den relativa förbättringen efter en liten optimering, det lilla testfall vi har är inge bra för det.
 
 Vi bör också ha kvar alla olika startfall (tex) så vi i framtiden lättare kan kombinera olika startfall med olika optimeringar. typ greedy och 2opt, 0-n och 3-opt, random och Lin-Kernighan etc etc :)
 

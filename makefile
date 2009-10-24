@@ -7,8 +7,11 @@ clean:
 tsp:
 	g++ -g -Wall tsp.cpp
 
-run: all
-	./a.out < example.output
+run:
+	./a.out
+
+test:
+	./testfall/testAll.sh | awk '{ sum += $$3 } END { print sum }'
 
 
 submit: clean tsp
