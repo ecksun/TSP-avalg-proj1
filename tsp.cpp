@@ -1,7 +1,7 @@
 #include <iostream>
 #include <math.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 struct node {
     float x;
@@ -108,7 +108,18 @@ int main() {
 
     // std::cout << rand() << std::endl;
 
-    // 2-opt, i hope
+    /* 2-opt, i hope
+     *
+     * Testa kör tills vi inte kan förbättra något mer
+     *
+     * om vi bara sätter i = 0 när vi har en förbättring så får vi TLE
+     *
+     * Kan testa att varje gång vi hittar en förbättring sätter vi en bool till true
+     * så att när vi har loopat igenom i->n så gör vi det igen, tills vi inte har några förbättringar kvar
+     *
+     * En uppsnabbning man kan göra är med grannlistor, som man kalkylerar i början och sedan bara gör 
+     * förbättringar med de närmaste grannarna ås kanske vi kan hinna :)
+     */
     for (int i = 0; i < numNodes-1; i++) {
         for (int n = i+3; n < numNodes-1; n++) {
             if (distance(*nodes[path[i+0]], *nodes[path[i+1]]) + distance(*nodes[path[n+0]], *nodes[path[n+1]]) >
