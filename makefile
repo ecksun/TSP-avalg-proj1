@@ -10,7 +10,7 @@ tsp:
 run:
 	./a.out
 
-test:
+test: all
 	./testfall/testAll.sh | awk '{ sum += $$3 } END { print sum }'
 
 

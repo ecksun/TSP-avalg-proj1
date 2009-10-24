@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <map>
 
 #define DEBUG 0
 
@@ -69,6 +70,7 @@ int main() {
     // std::cerr << "numNodes:\t" << numNodes << std::endl;
     node * nodes[numNodes];
     int used[numNodes];
+    std::multimap<float, int> neighbors[numNodes];
 
     float x,y;
     for (int i = 0; i < numNodes; i++) {
@@ -77,6 +79,29 @@ int main() {
         nodes[i] = new node(x,y);
         used[i] = false;
     }
+
+    // Vi letar reda på alla grannar vi har
+    for (int i = 0; i < numNodes; i++) {
+        for (int n = 0; n < numNodes; n++) {
+            neighbors[i].insert(std::pair<float, int>(
+                        distance(*nodes[i], *nodes[n]),
+                        n));
+        }
+    }
+
+
+    /*
+     * Printar ut alla grannar
+     *
+    std::multimap<float, int>::iterator it;
+
+    for (int i = 0; i < numNodes; i++) {
+        std::cout << "\t\t\t\t" << i << std::endl;
+        for (it = neighbors[i].begin(); it != neighbors[i].end(); it++) {
+            std::cout << it->first << " => " << it->second << std::endl;
+        }
+    }
+    */
 
     // testa något greedy
 
@@ -120,24 +145,24 @@ int main() {
      * En uppsnabbning man kan göra är med grannlistor, som man kalkylerar i början och sedan bara gör 
      * förbättringar med de närmaste grannarna ås kanske vi kan hinna :)
      */
-    for (int i = 0; i < numNodes-1; i++) {
-        for (int n = i+3; n < numNodes-1; n++) {
-            if (distance(*nodes[path[i+0]], *nodes[path[i+1]]) + distance(*nodes[path[n+0]], *nodes[path[n+1]]) >
-                    distance(*nodes[path[i+0]], *nodes[path[n+0]]) + distance(*nodes[path[i+1]], *nodes[path[n+1]])) {
-
-                if (DEBUG) {
-                    std::cerr << "\treverse(" << i+1 << "," << n << ")\t=> " << pathLength(nodes, path, numNodes);
-                }
-                reverse(i+1, n+0, path);
-                if (DEBUG) {
-                    std::cerr << " - " << pathLength(nodes, path, numNodes) << std::endl;
-                    if (DEBUG >= 2)
-                        printPath(nodes, path, numNodes);
-                }
-                // i = 0;
-            }
-        }
-    }
+    // for (int i = 0; i < numNodes-1; i++) {
+        // for (int n = i+3; n < numNodes-1; n++) {
+            // if (distance(*nodes[path[i+0]], *nodes[path[i+1]]) + distance(*nodes[path[n+0]], *nodes[path[n+1]]) >
+                    // distance(*nodes[path[i+0]], *nodes[path[n+0]]) + distance(*nodes[path[i+1]], *nodes[path[n+1]])) {
+// 
+                // if (DEBUG) {
+                    // std::cerr << "\treverse(" << i+1 << "," << n << ")\t=> " << pathLength(nodes, path, numNodes);
+                // }
+                // reverse(i+1, n+0, path);
+                // if (DEBUG) {
+                    // std::cerr << " - " << pathLength(nodes, path, numNodes) << std::endl;
+                    // if (DEBUG >= 2)
+                        // printPath(nodes, path, numNodes);
+                // }
+                // // i = 0;
+            // }
+        // }
+    // }
 
     // reverse(2,5, path);
     // printPath(nodes, path, numNodes);
