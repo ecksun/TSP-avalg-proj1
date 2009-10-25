@@ -159,23 +159,23 @@ int main() {
 
     std::multimap<float, int>::iterator it;
     int a, b, tmp1, tmp2;
+    unsigned int n = 0;
     bool improvement = true;
     while (improvement) {
         improvement = false;
         for (int i = 0; i < numNodes-1; i++) {
             // check the nearest neighbors
-            for (it = neighbors[i].begin(); it != neighbors[i].end(); it++) {
-                if (!(pos[it->second]+1 >= numNodes) && !(pos[i]+1 >= numNodes) && 
+            for (it = neighbors[i].begin(); it != neighbors[i].end() && n != neighborsToCheck; it++, n++) {
+                if (!(pos[it->second] >= numNodes) && !(pos[i]+1 >= numNodes) &&
                         distance(pos[i], pos[i]+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
                         distance(pos[i], pos[it->second], nodes, path) + distance(pos[i]+1, (pos[it->second]+1)%numNodes, nodes, path)) {
                     // reverse
                     improvement = true;
 
-                    
                     a = pos[i]+1;
                     b = pos[it->second];
                 
-                    std::cerr << "Innan (" << a << ", " << b << "):\t" << pathLength(nodes, path, numNodes) << std::endl;
+                    // std::cerr << "Innan (" << a << ", " << b << "):\t" << pathLength(nodes, path, numNodes) << std::endl;
                     while (a < b) {
                         // swap 
                         tmp1 = path[a];
@@ -190,9 +190,9 @@ int main() {
                         pos[tmp2] = a;
                         a++; b--;
                     }
-                    std::cerr << "Efter:\t" << pathLength(nodes, path, numNodes) << std::endl;
-                    printPath(nodes, path, numNodes);
-                    std::cerr << "efterPrintPath()" << std::endl;
+                    // std::cerr << "Efter:\t" << pathLength(nodes, path, numNodes) << std::endl;
+                    // printPath(nodes, path, numNodes);
+                    // std::cerr << "efterPrintPath()" << std::endl;
                 }
             }
         }
@@ -245,7 +245,7 @@ void swap(int x, int y, int  path[]) {
 
 void printPath(node * nodes[], int path[], int numNodes) {
     for (int i = 0; i < numNodes; i++) {
-        std::cout << "path[" << i << "] => " << path[i] << std::endl;
+        std::cerr << "path[" << i << "] => " << path[i] << std::endl;
     }
 }
 
