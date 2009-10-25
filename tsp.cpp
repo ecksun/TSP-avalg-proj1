@@ -58,7 +58,7 @@ int main() {
     int used[numNodes];
     std::multimap<float, int> neighbors[numNodes];
 
-    unsigned int static neighborsToCheck = 30;
+    unsigned int static neighborsToCheck = 100;
 
     float x,y;
     for (int i = 0; i < numNodes; i++) {
@@ -74,16 +74,15 @@ int main() {
             neighbors[i].insert(std::pair<float, int>(
                         distance(*nodes[i], *nodes[n]),
                         n));
+            // om vi har fler grannar än vi är intresserade av 
+            // tar vi bort den sista
             if (neighbors[i].size() > neighborsToCheck) {
-                // std::cout << "LOL:\t" << neighbors[i].size();
                 neighbors[i].erase(--neighbors[i].end());
-                // std::cout << "\tLOL:\t" << neighbors[i].size() << std::endl;
-                // sleep(1);
             }
         }
+        if (DEBUG > 1)
+            std::cerr << "size(" << i << "):\t" << neighbors[i].size() << std::endl;
     }
-
-
 
     /*
      * Printar ut alla grannar
@@ -118,7 +117,9 @@ int main() {
         used[best] = true;
     }
 
-    // just some path
+    /*
+     * just some path
+     */
     // for (int i = 0; i < numNodes; i++) {
     // path[i] = i;
     // }
@@ -163,14 +164,19 @@ int main() {
         for (int i = 0; i < numNodes-1; i++) {
             // check the nearest neighbors
             for (it = neighbors[i].begin(); it != neighbors[i].end() && n != neighborsToCheck; it++) {
-                if (
-                        distance(i, i+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
-                        distance(i, pos[it->second], nodes, path) + distance(i+1, (pos[it->second]+1)%numNodes, nodes, path)) {
+                // jag tar bort de fall då vi "går runt" dvs då vi räknar med nod numNodes och 0, 
+                // reversen verkar inte klara det så bra
+                if (!(pos[it->second]+1 >= numNodes) && 
+                        distance(pos[i], pos[i]+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
+                        distance(pos[i], pos[it->second], nodes, path) + distance(pos[i]+1, (pos[it->second]+1)%numNodes, nodes, path)) {
                     // reverse
                     improvement = true;
 
-                    a = i+1;
+                    
+                    a = pos[i]+1;
                     b = pos[it->second];
+                
+                    std::cerr << "Innan (" << a << ", " << b << "):\t" << pathLength(nodes, path, numNodes) << std::endl;
                     while (a < b) {
                         // swap 
                         tmp1 = path[a];
@@ -185,6 +191,8 @@ int main() {
                         pos[tmp2] = a;
                         a++; b--;
                     }
+                    std::cerr << "Efter:\t" << pathLength(nodes, path, numNodes) << std::endl;
+                    printPath(nodes, path, numNodes);
                 }
                 n++;
             }
