@@ -1,1 +1,7 @@
 a.out
+.cdtbuild
+.cdtproject
+.project
+.settings/
+*.swp
+Debug/
