@@ -58,7 +58,7 @@ int main() {
     int used[numNodes];
     std::multimap<float, int> neighbors[numNodes];
 
-    unsigned int static neighborsToCheck = 30;
+    unsigned int static neighborsToCheck = 100;
 
     float x,y;
     for (int i = 0; i < numNodes; i++) {
@@ -162,14 +162,14 @@ int main() {
         improvement = false;
         for (int i = 0; i < numNodes-1; i++) {
             // check the nearest neighbors
-            for (it = neighbors[i].begin(); it != neighbors[i].end() && n != neighborsToCheck; it++) {
-                if (
-                        distance(i, i+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
-                        distance(i, pos[it->second], nodes, path) + distance(i+1, (pos[it->second]+1)%numNodes, nodes, path)) {
+            for (it = neighbors[i].begin(); it != neighbors[i].end() && n != neighborsToCheck; it++, n++) {
+                if (!(pos[it->second] >= numNodes) && !(pos[i]+1 >= numNodes) &&
+                        distance(pos[i], pos[i]+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
+                        distance(pos[i], pos[it->second], nodes, path) + distance(pos[i]+1, (pos[it->second]+1)%numNodes, nodes, path)) {
                     // reverse
                     improvement = true;
 
-                    a = i+1;
+                    a = pos[i]+1;
                     b = pos[it->second];
                     while (a < b) {
                         // swap 
@@ -186,7 +186,6 @@ int main() {
                         a++; b--;
                     }
                 }
-                n++;
             }
         }
     }
