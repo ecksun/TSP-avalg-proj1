@@ -16,10 +16,13 @@ std::ostream & operator<<(std::ostream & os, const node & d) {
     return os;
 }       
 
-
-
+// lite headers, titta längst ner i filen :)
 float distance(float const x1, float const y1, float const x2, float const y2); 
 float distance(const node & n1, const node & n2);
+void swap(int x, int y, int  path[]);
+void printPath(node * nodes[], int path[], int numNodes);
+void reverse(int a, int b, int path[]);
+
 
 float pathLength(node * nodes[], int path[], int numNodes) {
     float sum = 0;
@@ -32,7 +35,7 @@ float pathLength(node * nodes[], int path[], int numNodes) {
     return sum;
 }
 
-float distance(int a, int b, node * nodes[], int path[]) {
+float pathLength(int a, int b, node * nodes[], int path[]) {
     float sum = 0;
     for (;a < b; a++) {
         sum += distance(*nodes[path[a]], *nodes[path[a+1]]);
@@ -40,27 +43,10 @@ float distance(int a, int b, node * nodes[], int path[]) {
     return sum;
 }
 
-void swap(int x, int y, int  path[]) {
-    // path[x]^=(path[y]^=(path[x]^=path[y]));
-    int tmp = path[x];
-    path[x] = path[y];
-    path[y] = tmp;
+inline float distance(int a, int b, node * nodes[], int path[]) {
+    return distance(*nodes[path[a]], *nodes[path[b]]);
 }
 
-void printPath(node * nodes[], int path[], int numNodes) {
-    for (int i = 0; i < numNodes; i++) {
-        std::cout << "path[" << i << "] => " << path[i] << std::endl;
-    }
-}
-
-void reverse(int a, int b, int path[]) {
-    b++;
-    for (;a<--b;a++) {
-        if (DEBUG >= 2) 
-            std::cerr << "swap(" << a << "," << b << ")" << std::endl;
-        swap(a,b, path);
-    }
-}
 
 // using namespace std;
 
@@ -71,6 +57,8 @@ int main() {
     node * nodes[numNodes];
     int used[numNodes];
     std::multimap<float, int> neighbors[numNodes];
+
+    int static neighborsToCheck = 20;
 
     float x,y;
     for (int i = 0; i < numNodes; i++) {
@@ -90,18 +78,19 @@ int main() {
     }
 
 
+
     /*
      * Printar ut alla grannar
      *
-    std::multimap<float, int>::iterator it;
+     std::multimap<float, int>::iterator it;
 
-    for (int i = 0; i < numNodes; i++) {
-        std::cout << "\t\t\t\t" << i << std::endl;
-        for (it = neighbors[i].begin(); it != neighbors[i].end(); it++) {
-            std::cout << it->first << " => " << it->second << std::endl;
-        }
-    }
-    */
+     for (int i = 0; i < numNodes; i++) {
+     std::cout << "\t\t\t\t" << i << std::endl;
+     for (it = neighbors[i].begin(); it != neighbors[i].end(); it++) {
+     std::cout << it->first << " => " << it->second << std::endl;
+     }
+     }
+     */
 
     // testa något greedy
 
@@ -125,8 +114,21 @@ int main() {
 
     // just some path
     // for (int i = 0; i < numNodes; i++) {
-        // path[i] = i;
+    // path[i] = i;
     // }
+
+
+    int pos[numNodes];
+    /*
+     * Håll koll på vart i en tur en nod är
+     *
+     * Vi behöver detta för att kunna slå upp saker i O(1) tid 
+     * när vi ska titta på grannar, iom att vi inte vet vart i turen
+     * en granne finns
+     */
+    for (int i = 0; i < numNodes; i++) {
+        pos[path[i]] = i;
+    }
 
 
     // Random start
@@ -145,23 +147,55 @@ int main() {
      * En uppsnabbning man kan göra är med grannlistor, som man kalkylerar i början och sedan bara gör 
      * förbättringar med de närmaste grannarna ås kanske vi kan hinna :)
      */
+
+    std::multimap<float, int>::iterator it;
+    int a, b, tmp1, tmp2, n = 0;
+    for (int i = 0; i < numNodes-1; i++) {
+        // check the nearest neighbors
+        for (it = neighbors[i].begin(); it != neighbors[i].end() && n != neighborsToCheck; it++) {
+            if (
+                    distance(i, i+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
+                    distance(i, pos[it->second], nodes, path) + distance(i+1, (pos[it->second]+1)%numNodes, nodes, path)) {
+                // reverse
+
+                a = i+1;
+                b = pos[it->second];
+                while (a < b) {
+                    // swap 
+                    tmp1 = path[a];
+                    tmp2 = path[b];
+
+                    path[a] = tmp2;
+                    path[b] = tmp1;
+                    // end swap
+
+                    // deras positioner i vår path byter också plats
+                    pos[tmp1] = b;
+                    pos[tmp2] = a;
+                    a++; b--;
+                }
+            }
+            n++;
+        }
+    }
+
     // for (int i = 0; i < numNodes-1; i++) {
-        // for (int n = i+3; n < numNodes-1; n++) {
-            // if (distance(*nodes[path[i+0]], *nodes[path[i+1]]) + distance(*nodes[path[n+0]], *nodes[path[n+1]]) >
-                    // distance(*nodes[path[i+0]], *nodes[path[n+0]]) + distance(*nodes[path[i+1]], *nodes[path[n+1]])) {
-// 
-                // if (DEBUG) {
-                    // std::cerr << "\treverse(" << i+1 << "," << n << ")\t=> " << pathLength(nodes, path, numNodes);
-                // }
-                // reverse(i+1, n+0, path);
-                // if (DEBUG) {
-                    // std::cerr << " - " << pathLength(nodes, path, numNodes) << std::endl;
-                    // if (DEBUG >= 2)
-                        // printPath(nodes, path, numNodes);
-                // }
-                // // i = 0;
-            // }
-        // }
+    // for (int n = i+3; n < numNodes-1; n++) {
+    // if (distance(*nodes[path[i+0]], *nodes[path[i+1]]) + distance(*nodes[path[n+0]], *nodes[path[n+1]]) >
+    // distance(*nodes[path[i+0]], *nodes[path[n+0]]) + distance(*nodes[path[i+1]], *nodes[path[n+1]])) {
+    // 
+    // if (DEBUG) {
+    // std::cerr << "\treverse(" << i+1 << "," << n << ")\t=> " << pathLength(nodes, path, numNodes);
+    // }
+    // reverse(i+1, n+0, path);
+    // if (DEBUG) {
+    // std::cerr << " - " << pathLength(nodes, path, numNodes) << std::endl;
+    // if (DEBUG >= 2)
+    // printPath(nodes, path, numNodes);
+    // }
+    // // i = 0;
+    // }
+    // }
     // }
 
     // reverse(2,5, path);
@@ -181,4 +215,26 @@ float distance(float const x1, float const y1, float const x2, float const y2)  
 
 float distance(const node & n1, const node & n2)  {
     return distance(n1.x, n1.y, n2.x, n2.y);
+}
+
+
+void swap(int x, int y, int  path[]) {
+    int tmp = path[x];
+    path[x] = path[y];
+    path[y] = tmp;
+}
+
+void printPath(node * nodes[], int path[], int numNodes) {
+    for (int i = 0; i < numNodes; i++) {
+        std::cout << "path[" << i << "] => " << path[i] << std::endl;
+    }
+}
+
+void reverse(int a, int b, int path[]) {
+    b++;
+    for (;a<--b;a++) {
+        if (DEBUG >= 2) 
+            std::cerr << "swap(" << a << "," << b << ")" << std::endl;
+        swap(a,b, path);
+    }
 }
