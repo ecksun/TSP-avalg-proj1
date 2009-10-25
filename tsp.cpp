@@ -165,9 +165,7 @@ int main() {
         for (int i = 0; i < numNodes-1; i++) {
             // check the nearest neighbors
             for (it = neighbors[i].begin(); it != neighbors[i].end(); it++) {
-                // jag tar bort de fall då vi "går runt" dvs då vi räknar med nod numNodes och 0, 
-                // reversen verkar inte klara det så bra
-                if (!(pos[it->second]+1 >= numNodes) && 
+                if (!(pos[it->second]+1 >= numNodes) && !(pos[i]+1 >= numNodes) && 
                         distance(pos[i], pos[i]+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
                         distance(pos[i], pos[it->second], nodes, path) + distance(pos[i]+1, (pos[it->second]+1)%numNodes, nodes, path)) {
                     // reverse
@@ -194,6 +192,7 @@ int main() {
                     }
                     std::cerr << "Efter:\t" << pathLength(nodes, path, numNodes) << std::endl;
                     printPath(nodes, path, numNodes);
+                    std::cerr << "efterPrintPath()" << std::endl;
                 }
             }
         }
