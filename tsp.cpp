@@ -71,13 +71,15 @@ int main() {
     // Vi letar reda på alla grannar vi har
     for (int i = 0; i < numNodes; i++) {
         for (int n = 0; n < numNodes; n++) {
-            neighbors[i].insert(std::pair<float, int>(
-                        distance(*nodes[i], *nodes[n]),
-                        n));
-            // om vi har fler grannar än vi är intresserade av 
-            // tar vi bort den sista
-            if (neighbors[i].size() > neighborsToCheck) {
-                neighbors[i].erase(--neighbors[i].end());
+            if (i != n) {
+                neighbors[i].insert(std::pair<float, int>(
+                            distance(*nodes[i], *nodes[n]),
+                            n));
+                // om vi har fler grannar än vi är intresserade av 
+                // tar vi bort den sista
+                if (neighbors[i].size() > neighborsToCheck) {
+                    neighbors[i].erase(--neighbors[i].end());
+                }
             }
         }
         if (DEBUG > 1)
