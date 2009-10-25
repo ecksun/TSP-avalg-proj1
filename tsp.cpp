@@ -58,7 +58,7 @@ int main() {
     int used[numNodes];
     std::multimap<float, int> neighbors[numNodes];
 
-    int static neighborsToCheck = 20;
+    unsigned int static neighborsToCheck = 30;
 
     float x,y;
     for (int i = 0; i < numNodes; i++) {
@@ -74,6 +74,12 @@ int main() {
             neighbors[i].insert(std::pair<float, int>(
                         distance(*nodes[i], *nodes[n]),
                         n));
+            if (neighbors[i].size() > neighborsToCheck) {
+                // std::cout << "LOL:\t" << neighbors[i].size();
+                neighbors[i].erase(--neighbors[i].end());
+                // std::cout << "\tLOL:\t" << neighbors[i].size() << std::endl;
+                // sleep(1);
+            }
         }
     }
 
@@ -82,15 +88,15 @@ int main() {
     /*
      * Printar ut alla grannar
      *
-     std::multimap<float, int>::iterator it;
-
-     for (int i = 0; i < numNodes; i++) {
-     std::cout << "\t\t\t\t" << i << std::endl;
-     for (it = neighbors[i].begin(); it != neighbors[i].end(); it++) {
-     std::cout << it->first << " => " << it->second << std::endl;
-     }
-     }
      */
+     // std::multimap<float, int>::iterator iter;
+// 
+     // for (int i = 0; i < numNodes; i++) {
+     // std::cout << "\t\t\t\t" << i << std::endl;
+     // for (iter = neighbors[i].begin(); iter != neighbors[i].end(); iter++) {
+     // std::cout << iter->first << " => " << iter->second << std::endl;
+     // }
+     // }
 
     // testa något greedy
 
@@ -149,33 +155,39 @@ int main() {
      */
 
     std::multimap<float, int>::iterator it;
-    int a, b, tmp1, tmp2, n = 0;
-    for (int i = 0; i < numNodes-1; i++) {
-        // check the nearest neighbors
-        for (it = neighbors[i].begin(); it != neighbors[i].end() && n != neighborsToCheck; it++) {
-            if (
-                    distance(i, i+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
-                    distance(i, pos[it->second], nodes, path) + distance(i+1, (pos[it->second]+1)%numNodes, nodes, path)) {
-                // reverse
+    int a, b, tmp1, tmp2;
+    unsigned int n = 0;
+    bool improvement = true;
+    while (improvement) {
+        improvement = false;
+        for (int i = 0; i < numNodes-1; i++) {
+            // check the nearest neighbors
+            for (it = neighbors[i].begin(); it != neighbors[i].end() && n != neighborsToCheck; it++) {
+                if (
+                        distance(i, i+1, nodes, path) + distance(pos[it->second], (pos[it->second]+1)%numNodes, nodes, path) >
+                        distance(i, pos[it->second], nodes, path) + distance(i+1, (pos[it->second]+1)%numNodes, nodes, path)) {
+                    // reverse
+                    improvement = true;
 
-                a = i+1;
-                b = pos[it->second];
-                while (a < b) {
-                    // swap 
-                    tmp1 = path[a];
-                    tmp2 = path[b];
+                    a = i+1;
+                    b = pos[it->second];
+                    while (a < b) {
+                        // swap 
+                        tmp1 = path[a];
+                        tmp2 = path[b];
 
-                    path[a] = tmp2;
-                    path[b] = tmp1;
-                    // end swap
+                        path[a] = tmp2;
+                        path[b] = tmp1;
+                        // end swap
 
-                    // deras positioner i vår path byter också plats
-                    pos[tmp1] = b;
-                    pos[tmp2] = a;
-                    a++; b--;
+                        // deras positioner i vår path byter också plats
+                        pos[tmp1] = b;
+                        pos[tmp2] = a;
+                        a++; b--;
+                    }
                 }
+                n++;
             }
-            n++;
         }
     }
 
