@@ -157,13 +157,12 @@ int main() {
 
     std::multimap<float, int>::iterator it;
     int a, b, tmp1, tmp2;
-    unsigned int n = 0;
     bool improvement = true;
     while (improvement) {
         improvement = false;
         for (int i = 0; i < numNodes-1; i++) {
             // check the nearest neighbors
-            for (it = neighbors[i].begin(); it != neighbors[i].end() && n != neighborsToCheck; it++) {
+            for (it = neighbors[i].begin(); it != neighbors[i].end(); it++) {
                 // jag tar bort de fall då vi "går runt" dvs då vi räknar med nod numNodes och 0, 
                 // reversen verkar inte klara det så bra
                 if (!(pos[it->second]+1 >= numNodes) && 
@@ -194,7 +193,6 @@ int main() {
                     std::cerr << "Efter:\t" << pathLength(nodes, path, numNodes) << std::endl;
                     printPath(nodes, path, numNodes);
                 }
-                n++;
             }
         }
     }
