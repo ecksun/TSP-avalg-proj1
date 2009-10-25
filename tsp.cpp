@@ -71,19 +71,20 @@ int main() {
     // Vi letar reda på alla grannar vi har
     for (int i = 0; i < numNodes; i++) {
         for (int n = 0; n < numNodes; n++) {
-            neighbors[i].insert(std::pair<float, int>(
-                        distance(*nodes[i], *nodes[n]),
-                        n));
-            if (neighbors[i].size() > neighborsToCheck) {
-                // std::cout << "LOL:\t" << neighbors[i].size();
-                neighbors[i].erase(--neighbors[i].end());
-                // std::cout << "\tLOL:\t" << neighbors[i].size() << std::endl;
-                // sleep(1);
+            if (i != n) {
+                neighbors[i].insert(std::pair<float, int>(
+                            distance(*nodes[i], *nodes[n]),
+                            n));
+                // om vi har fler grannar än vi är intresserade av 
+                // tar vi bort den sista
+                if (neighbors[i].size() > neighborsToCheck) {
+                    neighbors[i].erase(--neighbors[i].end());
+                }
             }
         }
+        if (DEBUG > 1)
+            std::cerr << "size(" << i << "):\t" << neighbors[i].size() << std::endl;
     }
-
-
 
     /*
      * Printar ut alla grannar
@@ -118,7 +119,9 @@ int main() {
         used[best] = true;
     }
 
-    // just some path
+    /*
+     * just some path
+     */
     // for (int i = 0; i < numNodes; i++) {
     // path[i] = i;
     // }
@@ -171,6 +174,8 @@ int main() {
 
                     a = pos[i]+1;
                     b = pos[it->second];
+                
+                    // std::cerr << "Innan (" << a << ", " << b << "):\t" << pathLength(nodes, path, numNodes) << std::endl;
                     while (a < b) {
                         // swap 
                         tmp1 = path[a];
@@ -185,6 +190,9 @@ int main() {
                         pos[tmp2] = a;
                         a++; b--;
                     }
+                    // std::cerr << "Efter:\t" << pathLength(nodes, path, numNodes) << std::endl;
+                    // printPath(nodes, path, numNodes);
+                    // std::cerr << "efterPrintPath()" << std::endl;
                 }
             }
         }
@@ -237,7 +245,7 @@ void swap(int x, int y, int  path[]) {
 
 void printPath(node * nodes[], int path[], int numNodes) {
     for (int i = 0; i < numNodes; i++) {
-        std::cout << "path[" << i << "] => " << path[i] << std::endl;
+        std::cerr << "path[" << i << "] => " << path[i] << std::endl;
     }
 }
 
