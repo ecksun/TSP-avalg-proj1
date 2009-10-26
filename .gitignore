@@ -1,2 +1,8 @@
 a.out
 *.gch
+.cdtbuild
+.cdtproject
+.project
+.settings/
+*.swp
+Debug/
