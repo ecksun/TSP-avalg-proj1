@@ -4,8 +4,11 @@ clean:
 	clear
 	rm -f *.h.gch a.out
 
-tsp:
+oldtsp:
 	g++ -g -Wall tsp.cpp
+
+tsp:
+	g++ -g -Wall tsp.h node.h tesp.cpp
 
 run:
 	./a.out
