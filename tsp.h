@@ -26,6 +26,7 @@ struct TSP {
     void printNeighbors();
 
     void greedyPath();
+    void oneToN();
 
     float distance(int, int);
 };

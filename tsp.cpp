@@ -1,6 +1,7 @@
 #include "tsp.h"
 #include <iostream>
 #include <math.h>
+#include <assert.h>
 #define DEBUG 1
 
 /*
@@ -40,7 +41,7 @@ void TSP::createNeighbors() {
 /*
  * Räknar ut avståndet mellan de två noderna a och b
  */
-float TSP::distance(int a, int b) {
+float TSP::distance(const int a, const int b) {
     return sqrt(pow((nodes[b]->x - nodes[a]->x), 2) + pow((nodes[b]->y - nodes[a]->y),2));
 }
 
@@ -65,9 +66,13 @@ void TSP::greedyPath() {
     // initialize used to false
     // and tour to 0;
     for (int i = 0; i < numNodes; i++) {
-        used[numNodes] = false;
+        used[i] = false;
         tour.push_back(0); 
     }
+
+    // for (int i = 0; i < numNodes; i++) {
+        // std::cout << used[i] << std::endl;
+    // }
 
     tour[0] = 0;
     used[0] = true;
@@ -77,13 +82,31 @@ void TSP::greedyPath() {
         best = -1;
         for (int j = 0; j < numNodes; j++) {
             if (!used[j]) {
-                if (best == -1 || (distance(tour[i-1], j) < distance(tour[i-1], best))) {
+                if (best == -1) {
+                    best = j;
+                }
+                if  (distance(tour[i-1], j) < distance(tour[i-1], best)) {
                     best = j;
                 }
             }
         }
+        // if (best == -1) {
+            // std::cout << "EROR HÄR: "<< i << std::endl;
+            // for (int i = 0; i < numNodes; i++) {
+                // std::cout << i << ":\t";
+                // std::cout << used[i];
+                // std::cout << std::endl;
+            // }
+        // }
         tour[i] = best;
         used[best] = true;
+    }
+    // delete[] used;
+}
+
+void TSP::oneToN() {
+    for (int i = 0; i < numNodes; i++) {
+        tour.push_back(i);
     }
 }
 
@@ -119,6 +142,11 @@ int main() {
 
     // dont forget to init tour somewhere
 
+    // tsp.greedyPath();
+    
+    tsp.oneToN();
+
+    std::cerr << "oneToN() done" << std::endl;
     tsp.greedyPath();
 
     std::cerr << "greedyPath() done" << std::endl;

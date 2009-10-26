@@ -7,10 +7,10 @@ clear:
 	clear
 
 oldtsp:
-	g++ -g -Wall tsp.cpp
+	g++ -g -Wall tsp_old.cpp
 
 tsp:
-	g++ -g -Wall tsp.h node.h tesp.cpp
+	g++ -g -Wall tsp.h node.h tsp.cpp
 
 run: clean tsp
 	./a.out < testfall/example.output
@@ -20,4 +20,4 @@ test: all
 
 
 submit: clean tsp
-	./submit.py -f -p tsp tsp.cpp
+	./submit.py -f -p tsp tsp.h node.h tsp.cpp
