@@ -45,6 +45,21 @@ float TSP::distance(const int a, const int b) {
     return sqrt(pow((nodes[b]->x - nodes[a]->x), 2) + pow((nodes[b]->y - nodes[a]->y),2));
 }
 
+
+
+/*
+ * Håll koll på vart i en tur en nod är
+ *
+ * Vi behöver detta för att kunna slå upp saker i O(1) tid 
+ * när vi ska titta på grannar, iom att vi inte vet vart i turen
+ * en granne finns
+ */
+void TSP::createPos() {
+    for (int i = 0; i < numNodes; i++) {
+        (*pos)[tour[i]] = i;
+    }
+}
+
 /*
  * Printar ut alla grannar
  *
@@ -70,10 +85,6 @@ void TSP::greedyPath() {
         tour.push_back(0); 
     }
 
-    // for (int i = 0; i < numNodes; i++) {
-        // std::cout << used[i] << std::endl;
-    // }
-
     tour[0] = 0;
     used[0] = true;
     int best;
@@ -82,26 +93,14 @@ void TSP::greedyPath() {
         best = -1;
         for (int j = 0; j < numNodes; j++) {
             if (!used[j]) {
-                if (best == -1) {
-                    best = j;
-                }
-                if  (distance(tour[i-1], j) < distance(tour[i-1], best)) {
+                if (best == -1 || (distance(tour[i-1], j) < distance(tour[i-1], best))) {
                     best = j;
                 }
             }
         }
-        // if (best == -1) {
-            // std::cout << "EROR HÄR: "<< i << std::endl;
-            // for (int i = 0; i < numNodes; i++) {
-                // std::cout << i << ":\t";
-                // std::cout << used[i];
-                // std::cout << std::endl;
-            // }
-        // }
         tour[i] = best;
         used[best] = true;
     }
-    // delete[] used;
 }
 
 void TSP::oneToN() {
@@ -143,8 +142,8 @@ int main() {
     // dont forget to init tour somewhere
 
     // tsp.greedyPath();
-    
-    tsp.oneToN();
+
+    // tsp.oneToN();
 
     std::cerr << "oneToN() done" << std::endl;
     tsp.greedyPath();
