@@ -41,7 +41,7 @@ void TSP::createNeighbors() {
  * Räknar ut avståndet mellan de två noderna a och b
  */
 float TSP::distance(int a, int b) {
-    return sqrt(pow((nodes[b]->x - nodes[a]->x), 2) + pow((nodes[b]->y - nodes[b]->y),2));
+    return sqrt(pow((nodes[b]->x - nodes[a]->x), 2) + pow((nodes[b]->y - nodes[a]->y),2));
 }
 
 /*
@@ -69,20 +69,14 @@ void TSP::greedyPath() {
         tour.push_back(0); 
     }
 
+    for (int i = 0; i < numNodes; i++) {
+        std::cout << "tour[" << i << "] = " << tour[i] << std::endl;
+    }
+
     tour[0] = 0;
     used[0] = true;
     int best;
 
-    for (int i = 0; i < numNodes; i++) {
-        if (used[i] == false) {
-            std::cout << i << " - false" << std::endl;
-        }
-        else if (used[i]) {
-            std::cout << i << " - true" << std::endl;
-        }
-    }
-
-    std::cout << "nodes:" << numNodes << std::endl;
     for (int i = 1; i < numNodes; i++) {
         best = -1;
         for (int j = 0; j < numNodes; j++) {
