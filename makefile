@@ -1,8 +1,10 @@
-all: clean tsp
+all: clean clean tsp
 
 clean:
-	clear
 	rm -f *.h.gch a.out
+
+clear:
+	clear
 
 oldtsp:
 	g++ -g -Wall tsp.cpp
@@ -10,8 +12,8 @@ oldtsp:
 tsp:
 	g++ -g -Wall tsp.h node.h tesp.cpp
 
-run:
-	./a.out
+run: clean tsp
+	./a.out < testfall/example.output
 
 test: all
 	./testfall/testAll.sh | awk '{ sum += $$3 } END { print sum }'

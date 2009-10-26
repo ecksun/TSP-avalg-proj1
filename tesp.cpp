@@ -3,21 +3,22 @@
 #include <math.h>
 #define DEBUG 1
 
+/*
+ * Läser in alla noder och lägger dem i nodes[]
+ */
 void TSP::init() {
-    short int used[numNodes];
-    // nodes[numNodes];
-    // neighbors[numNodes];
-
     float x,y;
     for (int i = 0; i < numNodes; i++) {
         scanf("%f", &x);
         scanf("%f", &y);
         nodes.push_back(new node(x,y));
-        used[i] = false;
         neighbors.push_back(new std::multimap<float, short int>);
     }
 }
 
+/*
+ * Skapar alla grannlistor
+ */
 void TSP::createNeighbors() {
     // Vi letar reda på alla grannar vi har
     for (int i = 0; i < numNodes; i++) {
@@ -36,6 +37,9 @@ void TSP::createNeighbors() {
     }
 }
 
+/*
+ * Räknar ut avståndet mellan de två noderna a och b
+ */
 float TSP::distance(int a, int b) {
     return sqrt(pow((nodes[b]->x - nodes[a]->x), 2) + pow((nodes[b]->y - nodes[b]->y),2));
 }
@@ -56,6 +60,67 @@ void TSP::printNeighbors() {
     }
 }
 
+void TSP::greedyPath() {
+    bool used[numNodes];
+    // initialize used to false
+    // and tour to 0;
+    for (int i = 0; i < numNodes; i++) {
+        used[numNodes] = false;
+        tour.push_back(0); 
+    }
+
+    tour[0] = 0;
+    used[0] = true;
+    int best;
+
+    for (int i = 0; i < numNodes; i++) {
+        if (used[i] == false) {
+            std::cout << i << " - false" << std::endl;
+        }
+        else if (used[i]) {
+            std::cout << i << " - true" << std::endl;
+        }
+    }
+
+    std::cout << "nodes:" << numNodes << std::endl;
+    for (int i = 1; i < numNodes; i++) {
+        best = -1;
+        for (int j = 0; j < numNodes; j++) {
+            std::cout << i << ":" << std::endl;
+            if (!used[j])
+                std::cout << "!used[j] == true" << std::endl;
+            if (best == -1)
+                std::cout << "best == -1" << std::endl;
+            // if (distance(tour[i-1], j) < distance(tour[i-1], best))
+                // std::cout << "distance är också sant" << std::endl;
+            if (!used[j] && (best == -1 || distance(tour[i-1], j) < distance(tour[i-1], best))) {
+                std::cout << "change best to " << j << std::endl;
+                best = j;
+            }
+        }
+        std::cout << "tour[" << i << "] = " << best << std::endl;
+        tour[i] = best;
+        used[best] = true;
+    }
+}
+
+void TSP::printTour() {
+    for (int i = 0; i < numNodes; i++) {
+        std::cout << tour[i] << std::endl;
+    }
+}
+
+float TSP::tourLength() {
+    float sum = 0;
+    for (int i = 1; i < numNodes; i++) {
+        std::cerr << "tour[" << i << "] = " << tour[i] << std::endl;
+        sum += distance(tour[i-1], tour[i]);
+    }
+    sum += distance(tour[0], tour[numNodes-1]);
+    return sum;
+}
+
+
 int main() {
     int nodes;
     scanf("%d", &nodes);
@@ -67,6 +132,19 @@ int main() {
     std::cerr << "init done" << std::endl;
     tsp.createNeighbors();
     std::cerr << "createNeighbors() done" << std::endl;
-    tsp.printNeighbors();
-    std::cerr << "printNeighbors() done" << std::endl;
+    // tsp.printNeighbors();
+    // std::cerr << "printNeighbors() done" << std::endl;
+
+    // dont forget to init tour somewhere
+    
+    tsp.greedyPath();
+
+    std::cerr << "greedyPath() done" << std::endl;
+
+    tsp.printTour();
+
+    std::cerr << "printTour() done" << std::endl;
+
+    std::cerr << "tour length:\t" << tsp.tourLength() << std::endl;
+
 }

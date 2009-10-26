@@ -11,15 +11,21 @@ struct TSP {
 
     std::vector<node *> nodes;
 
+    std::vector<short int> tour;
 
     std::vector<std::multimap<float, short int> *> neighbors;
 
     TSP(int nodes) : numNodes(nodes) {}
 
     void init();
-    void printNode(const node &);
+    
+    void printTour();
+    float tourLength();
+
     void createNeighbors();
     void printNeighbors();
+
+    void greedyPath();
 
     float distance(int, int);
 };
