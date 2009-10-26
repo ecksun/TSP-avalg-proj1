@@ -69,10 +69,6 @@ void TSP::greedyPath() {
         tour.push_back(0); 
     }
 
-    for (int i = 0; i < numNodes; i++) {
-        std::cout << "tour[" << i << "] = " << tour[i] << std::endl;
-    }
-
     tour[0] = 0;
     used[0] = true;
     int best;
@@ -80,19 +76,12 @@ void TSP::greedyPath() {
     for (int i = 1; i < numNodes; i++) {
         best = -1;
         for (int j = 0; j < numNodes; j++) {
-            std::cout << i << ":" << std::endl;
-            if (!used[j])
-                std::cout << "!used[j] == true" << std::endl;
-            if (best == -1)
-                std::cout << "best == -1" << std::endl;
-            // if (distance(tour[i-1], j) < distance(tour[i-1], best))
-                // std::cout << "distance är också sant" << std::endl;
-            if (!used[j] && (best == -1 || distance(tour[i-1], j) < distance(tour[i-1], best))) {
-                std::cout << "change best to " << j << std::endl;
-                best = j;
+            if (!used[j]) {
+                if (best == -1 || (distance(tour[i-1], j) < distance(tour[i-1], best))) {
+                    best = j;
+                }
             }
         }
-        std::cout << "tour[" << i << "] = " << best << std::endl;
         tour[i] = best;
         used[best] = true;
     }
@@ -107,7 +96,6 @@ void TSP::printTour() {
 float TSP::tourLength() {
     float sum = 0;
     for (int i = 1; i < numNodes; i++) {
-        std::cerr << "tour[" << i << "] = " << tour[i] << std::endl;
         sum += distance(tour[i-1], tour[i]);
     }
     sum += distance(tour[0], tour[numNodes-1]);
@@ -130,7 +118,7 @@ int main() {
     // std::cerr << "printNeighbors() done" << std::endl;
 
     // dont forget to init tour somewhere
-    
+
     tsp.greedyPath();
 
     std::cerr << "greedyPath() done" << std::endl;
