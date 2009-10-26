@@ -1,4 +1,5 @@
 #include "tour.h"
+#include <iostream>
 
 Tour::Tour() {
     nodes = new std::vector<short int>();
@@ -12,8 +13,15 @@ Tour::~Tour() {
  * Adds the specified node index at the end of this tour, after its
  * current last node.
  */
-void add(short int i) {
-    nodes.push_back(i);
+void Tour::add(short int i) {
+    nodes->push_back(i);
+}
+
+/**
+ * Returns the node at index i of this tour.
+ */
+short int Tour::get(int i) const {
+    return (*nodes)[i];
 }
 
 /**
@@ -22,14 +30,20 @@ void add(short int i) {
  */
 float Tour::length(float (*distPtr)(int a, int b)) const {
     float sum = 0;
-    std::vector<short int>::const_iterator it;
 
-    for (it = nodes.begin(); it != nodes.end(); it++) {
-        sum += (*distPtr)(tour[i-1], tour[i]);
+    for (unsigned int i = 1; i < nodes->size(); i++) {
+        sum += (*distPtr)((*nodes)[i-1], (*nodes)[i]);
     }
 
-    sum += (*distPtr)(tour[0], tour[numNodes-1]);
+    sum += (*distPtr)((*nodes)[0], (*nodes)[nodes->size()-1]);
     return sum;
+}
+
+/**
+ * Returns the number of nodes in this tour.
+ */
+int Tour::numNodes() const {
+    return nodes->size();
 }
 
 /**
@@ -37,18 +51,16 @@ float Tour::length(float (*distPtr)(int a, int b)) const {
  *
  * TODO: is this working?
  */
-short int & operator[](short int i) {
-    return vector[i];
+short int & Tour::operator[](short int i) {
+    return (*nodes)[i];
 }
 
 /**
  * Prints a string representation of this tour to the given ostream.
  */
-std::ostream & operator<<(std::ostream & os, const Tour &) {
-    std::vector<short int>::const_iterator tourIt;
-
-    for (tourIt = nodes.begin(); tourIt != nodes.end(); tourIt++) {
-        std::cout << *tourIt;
+std::ostream & operator<<(std::ostream & os, const Tour & t) {
+    for (int i = 0; i < t.numNodes(); i++) {
+        std::cout << t.get(i) << std::endl;
     }
     
     return os;

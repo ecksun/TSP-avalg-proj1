@@ -4,21 +4,20 @@
 #include <vector>
 
 class Tour {
-    std::vector<short int> nodes;
+    std::vector<short int> * nodes;
 
     public:
 
     Tour();
     ~Tour();
 
-    void add(short int i);
+    void add(short int);
+    short int get(int) const;
     float length(float (*distPtr)(int, int)) const;
+    int numNodes() const;
 
-    Tour & operator[](short int i);
+    short int & operator[](short int);
 };
 
-std::ostream & operator<<(std::ostream & os, const Tour &);
-
-}
 
 #endif /* TOUR_HEADER guard */
