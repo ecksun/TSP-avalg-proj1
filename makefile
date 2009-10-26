@@ -10,7 +10,7 @@ oldtsp:
 	g++ -g -Wall tsp_old.cpp
 
 tsp:
-	g++ -g -Wall tsp.h node.h tour.h tsp.cpp tour.cpp
+	g++ -g -Wall node.h tour.h tour.cpp tsp.h tsp.cpp 
 
 run: clean tsp
 	./a.out < testfall/example.output

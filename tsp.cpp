@@ -1,8 +1,25 @@
 #include "tsp.h"
+#include "tour.h"
 #include <iostream>
 #include <math.h>
 #include <assert.h>
 #define DEBUG 1
+
+
+/**
+ * Constructs a new TSP instance
+ */
+TSP::TSP(int nodes) : numNodes(nodes) {
+    tour = new Tour();
+}
+
+/**
+ * Destructs this TSP instance.
+ */
+TSP::~TSP() {
+    delete tour;
+}
+
 
 /*
  * Läser in alla noder och lägger dem i nodes[]
@@ -67,14 +84,14 @@ void TSP::greedyPath() {
     // and tour to 0;
     for (int i = 0; i < numNodes; i++) {
         used[i] = false;
-        tour.push_back(0); 
+        tour->add(0); 
     }
 
     // for (int i = 0; i < numNodes; i++) {
         // std::cout << used[i] << std::endl;
     // }
 
-    tour[0] = 0;
+    (*tour)[0] = 0;
     used[0] = true;
     int best;
 
@@ -85,7 +102,7 @@ void TSP::greedyPath() {
                 if (best == -1) {
                     best = j;
                 }
-                if  (distance(tour[i-1], j) < distance(tour[i-1], best)) {
+                if  (distance((*tour)[i-1], j) < distance((*tour)[i-1], best)) {
                     best = j;
                 }
             }
@@ -98,7 +115,7 @@ void TSP::greedyPath() {
                 // std::cout << std::endl;
             // }
         // }
-        tour[i] = best;
+        (*tour)[i] = best;
         used[best] = true;
     }
     // delete[] used;
@@ -106,7 +123,7 @@ void TSP::greedyPath() {
 
 void TSP::oneToN() {
     for (int i = 0; i < numNodes; i++) {
-        tour.push_back(i);
+        tour->add(i);
     }
 }
 
@@ -118,20 +135,12 @@ void TSP::twoOpt() {
 }
 
 void TSP::printTour() {
-    for (int i = 0; i < numNodes; i++) {
-        std::cout << tour[i] << std::endl;
-    }
+    std::cout << tour;
 }
 
 float TSP::tourLength() {
-    float sum = 0;
-    for (int i = 1; i < numNodes; i++) {
-        sum += distance(tour[i-1], tour[i]);
-    }
-    sum += distance(tour[0], tour[numNodes-1]);
-    return sum;
+    return tour->length(*this);
 }
-
 
 int main() {
     int nodes;

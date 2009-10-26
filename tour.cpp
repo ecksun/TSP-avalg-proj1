@@ -28,14 +28,14 @@ short int Tour::get(int i) const {
  * Calculates the length of this tour using a function pointer to the
  * distance function in TSP.
  */
-float Tour::length(float (*distPtr)(int a, int b)) const {
+float Tour::length(const TSP & tsp) const {
     float sum = 0;
 
     for (unsigned int i = 1; i < nodes->size(); i++) {
-        sum += (*distPtr)((*nodes)[i-1], (*nodes)[i]);
+        sum += tsp.distance((*nodes)[i-1], (*nodes)[i]);
     }
 
-    sum += (*distPtr)((*nodes)[0], (*nodes)[nodes->size()-1]);
+    sum += tsp.distance((*nodes)[0], (*nodes)[nodes->size()-1]);
     return sum;
 }
 
