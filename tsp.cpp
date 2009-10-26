@@ -110,6 +110,13 @@ void TSP::oneToN() {
     }
 }
 
+/**
+ * Performs the 2-opt local search.
+ */
+void TSP::twoOpt() {
+
+}
+
 void TSP::printTour() {
     for (int i = 0; i < numNodes; i++) {
         std::cout << tour[i] << std::endl;
@@ -142,14 +149,18 @@ int main() {
 
     // dont forget to init tour somewhere
 
-    // tsp.greedyPath();
+//    tsp.greedyPath();
     
-    tsp.oneToN();
+//    tsp.oneToN();
 
     std::cerr << "oneToN() done" << std::endl;
     tsp.greedyPath();
 
     std::cerr << "greedyPath() done" << std::endl;
+
+    // perform local search optimization
+    tsp.twoOpt();
+    std::cerr << "optimization done" << std::endl;
 
     tsp.printTour();
 

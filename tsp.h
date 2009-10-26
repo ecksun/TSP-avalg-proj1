@@ -28,6 +28,8 @@ struct TSP {
     void greedyPath();
     void oneToN();
 
+    void twoOpt();
+
     float distance(int, int);
 };
 #endif

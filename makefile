@@ -1,4 +1,4 @@
-all: clean clean tsp
+all: clean tsp
 
 clean:
 	rm -f *.h.gch a.out
