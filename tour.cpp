@@ -60,7 +60,7 @@ short int & Tour::operator[](short int i) {
  */
 std::ostream & operator<<(std::ostream & os, const Tour & t) {
     for (int i = 0; i < t.numNodes(); i++) {
-        std::cout << t.get(i) << std::endl;
+         os<< t.get(i) << std::endl;
     }
     
     return os;
