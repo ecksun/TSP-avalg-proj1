@@ -33,17 +33,16 @@ class Tour {
 
     /**
      * Returns the node index at the specified position index of the
-     * tour.
+     * tour, both starting with zero.
      * @param posIndex The position index (0: first node)
+     * @return -1 if index out of bounds, otherwise the node index
      */
     int getNode(int posIndex) {
         try {
-            return nodes[posIndex+1];
+            return nodes[posIndex];
         } catch (ArrayIndexOutOfBoundsException e) {
             return -1;
         }
-
-        return nodes[posIndex];
     }
 
     /**
@@ -59,6 +58,25 @@ class Tour {
         } catch (ArrayIndexOutOfBoundsException e) {
             return -1;
         }
+    }
+
+
+    /**
+     * Returns the position (order in this tour) index, starting with
+     * zero of the specified node index.
+     *
+     * @param nodeIndex the node index for the returned position index
+     * @return the position index, or -1 if not found
+     */
+    int getPos(int nodeIndex) {
+        // TODO: optimize this naive approach
+        for (int posIndex = 0; posIndex < currNumAddedNodes; posIndex++) {
+            if (nodes[posIndex] == nodeIndex) {
+                return nodeIndex;
+            }
+        }
+
+        return -1;
     }
 
     /**
