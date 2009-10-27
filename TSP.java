@@ -127,6 +127,26 @@ public class TSP {
         }
     }
 
+    /**
+     * Vi kanske kan tjäna lite hastighet här genom att buffra outputen
+     */
+    void printTour() {
+        System.out.println(tour);
+    }
+
+    /**
+     * Print all neighbors in a matrix style kinda way
+     */
+    void printNeighbors() {
+        System.err.println("=== Neighbors ===");
+        for (int i = 0; i < numNodes; i++) {
+            for (int j = 0; j < neighborsToCheck; j++) {
+                System.err.print(neighbors[i][j] + "\t");
+            }
+            System.err.println();
+        }
+    }
+
     /* eventuell optimering, ´cacha alla avstånt i en matris 
      * (sätt okalkylerade värden till -1)
      */
@@ -161,20 +181,6 @@ public class TSP {
             tour.addNode(best); // should be on pos i
             used[best] = true;
         }
-    }
-
-    // should be done i Tour
-    // void createPos() {
-    // for (int i = 0; i <  numNodes; i++) {
-    // pos[tour.getNode(i)] = i;
-    // }
-    // }
-
-    /**
-     * Vi kanske kan tjäna lite hastighet här genom att buffra outputen
-     */
-    void printTour() {
-        System.out.println(tour);
     }
 
 
