@@ -87,12 +87,13 @@ class Tour {
      * @param b The other node to change place
      */
     void swap (int a, int b) {
+        if (a == b) 
+            return;
         int tmp1 = nodes[a];
-        int tmp2 = nodes[b];
-        nodes[a] = tmp2;
+        nodes[a] = nodes[b];
         nodes[b] = tmp1;
-        positions[tmp1] = b;
-        positions[tmp2] = a;
+        positions[nodes[a]] = a;
+        positions[nodes[b]] = b;
 
     }
 

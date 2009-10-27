@@ -134,11 +134,10 @@ public class TSP {
         return Math.sqrt((nodes[a].x-nodes[b].x) * (nodes[a].x-nodes[b].x) + (nodes[a].y-nodes[b].y) * (nodes[a].y-nodes[b].y));
     }
 
-    double calcDistance(Node a, Node b) {
-        return Math.sqrt((a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y));
-    }
-
     double distance(int a, int b) {
+        if (a == b) {
+            return -1;
+        }
         if (b < a) {
             // System.err.printf("distance(%d, %d) = %f\n", a, b, distance[b][a]);
             return distance[b][a];
@@ -188,11 +187,10 @@ public class TSP {
             improvement = false;
 improve:
             for (int i = 0; i < numNodes; i++) {
+                int c1 = tour.getPos(i); // citi 1
+                int nc1 = tour.getNextNode(c1); // the next city after city 1
+
                 for (int n = 0; n < neighborsToCheck; n++) {
-
-                    int c1 = tour.getPos(i); // citi 1
-                    int nc1 = tour.getNextNode(c1); // the next city after city 1
-
                     int c2 = neighbors[c1][n];
                     int nc2 = tour.getNextNode(c2);
 
@@ -204,34 +202,36 @@ improve:
                         // distance(pos[i], neighbors[pos[i]][n]) + 
                         // distance(pos[i]+1, pos[neighbors[pos[i]][n]]+1))
                         // {
+                        System.err.println("Före: " + tour.length(this));
                         improvement = true;
                         reverse(nc1, c2);
+                        System.err.println("Efter: " + tour.length(this));
                         // reverse(pos[i]+1, neighbors[pos[i]][n]);
                         continue improve;
-                        }
+                    }
 
-                            }
-                }
-            }
-        }
-
-        void reverse(int a, int b) {
-            // fungerar detta=
-            if (a > b)
-                reverse(b, a);
-            else {
-                while (a < b) {
-                    // wraparound
-                    if (a == numNodes)
-                        a = 0;
-                    if (b == 0)
-                        b = numNodes-1;
-
-                    tour.swap(a,b);
-
-                    a++;
-                    b--;
                 }
             }
         }
     }
+
+    void reverse(int a, int b) {
+        // fungerar detta=
+        if (a > b)
+            reverse(b, a);
+        else {
+            while (a < b) {
+                // wraparound
+                if (a == numNodes)
+                    a = 0;
+                if (b == 0)
+                    b = numNodes-1;
+
+                tour.swap(a,b);
+
+                a++;
+                b--;
+            }
+        }
+    }
+}
