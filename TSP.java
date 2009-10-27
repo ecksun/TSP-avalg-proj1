@@ -152,4 +152,14 @@ improve:
             }
         }
     }
+
+    void swap(int a, int b) {
+        int tmp1 = tour[a];
+        int tmp2 = tour[b];
+        tour[a] = tmp2;
+        tour[b] = tmp1;
+        pos[tmp1] = b;
+        pos[tmp2] = a;
+
+    }
 }
