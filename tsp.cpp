@@ -12,7 +12,7 @@
  */
 TSP::TSP(int nodes) : numNodes(nodes) {
     tour = new Tour();
-    pos = new short unsigned int[numNodes];
+    pos = new int[nodes];
 }
 
 /**
@@ -76,7 +76,7 @@ float TSP::distance(const int a, const int b) const {
  */
 void TSP::createPos() {
     for (int i = 0; i < numNodes; i++) {
-        (*pos)[(*tour)[i]] = i;
+        pos[(*tour)[i]] = i;
     }
 }
 
@@ -149,19 +149,19 @@ improve:
     while (improvement) {
         improvement = false;
         for (short unsigned int i, n  = 0; i < numNodes; i++) {
-            for (it = neighbors[(*pos)[i]]->begin();
-                    it != neighbors[(*pos)[i]]->end() &&
+            for (it = neighbors[pos[i]]->begin();
+                    it != neighbors[pos[i]]->end() &&
                     n  != neighborsToCheck; it++, n++)
             {
                 if (
-                        distance((*pos)[i], (*pos)[i]+1) + 
-                        distance((*pos)[it->second], (*pos)[it->second]+1)
+                        distance(pos[i], pos[i]+1) + 
+                        distance(pos[it->second], pos[it->second]+1)
                         >
-                        distance((*pos)[i], (*pos)[it->second]) +
-                        distance((*pos)[i]+1, (*pos)[it->second]+1))
+                        distance(pos[i], pos[it->second]) +
+                        distance(pos[i]+1, pos[it->second]+1))
                 {
                     improvement = true;
-                    reverse((*pos)[i], (*pos)[it->second]);
+                    reverse(pos[i], pos[it->second]);
                     goto improve;
                 }
             }
@@ -180,8 +180,8 @@ void TSP::reverse(int i, int j) {
         c2 = (*tour)[j];
         (*tour)[i] = c2;
         (*tour)[j] = c1;
-        (*pos)[c1] = j;
-        (*pos)[c2] = i;
+        pos[c1] = j;
+        pos[c2] = i;
         i++; 
         j--;
     }

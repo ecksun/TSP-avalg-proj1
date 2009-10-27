@@ -31,7 +31,7 @@ int Tour::get(int i) const {
 float Tour::length(const TSP & tsp) const {
     float sum = 0;
 
-    for (int i = 1; i < nodes->size(); i++) {
+    for (unsigned int i = 1; i < nodes->size(); i++) {
         sum += tsp.distance((*nodes)[i-1], (*nodes)[i]);
     }
 

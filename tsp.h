@@ -11,7 +11,7 @@ struct TSP {
     int const numNodes;
     static const unsigned int neighborsToCheck = 100; // Perhaps pre-processing konstant (#define) ?
 
-    short unsigned int * pos[];
+    int * pos;
 
     std::vector<node *> nodes;
 
