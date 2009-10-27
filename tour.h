@@ -3,6 +3,9 @@
 
 #include "tsp.h"
 #include <vector>
+#include <iostream>
+#include <sstream>
+// TODO: rensa upp includes
 
 struct TSP; // forward declaration -- fult?
 
@@ -22,5 +25,6 @@ class Tour {
     short int & operator[](short int);
 };
 
+std::ostream & operator<<(std::ostream &, const Tour &);
 
 #endif /* TOUR_HEADER guard */

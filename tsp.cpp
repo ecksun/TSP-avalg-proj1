@@ -136,7 +136,7 @@ void TSP::twoOpt() {
 }
 
 void TSP::printTour() {
-    std::cout << tour;
+    std::cout << (*tour);
 }
 
 float TSP::tourLength() {
