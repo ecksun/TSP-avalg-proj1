@@ -5,6 +5,8 @@ public class TSP {
     Node[] nodes;
     double[][] neighbors;
 
+    double[][] distance;
+
     Tour tour;
 
     private final int neighborsToCheck = 30;
@@ -18,12 +20,21 @@ public class TSP {
         nodes = new Node[numNodes];
         tour = new Tour(numNodes);
         readNodes();
+        createDistance();
         createNeighbors();
     }
 
     void readNodes() {
         for (int i = 0; i < numNodes; i++) {
             nodes[i] = new Node(io.getDouble(), io.getDouble());
+        }
+    }
+
+    void createDistance() {
+        for (int i = 0; i < numNodes; i++) {
+            for (int j = i; j < numNodes; j++) {
+                distance[i][j] = calcDistance(i,j);
+            }
         }
     }
 
@@ -70,12 +81,19 @@ public class TSP {
     /* eventuell optimering, ´cacha alla avstånt i en matris 
      * (sätt okalkylerade värden till -1)
      */
-    double distance(int a, int b) {
+    double calcDistance(int a, int b) {
         return Math.sqrt((nodes[a].x-nodes[b].x) * (nodes[a].x-nodes[b].x) + (nodes[a].y-nodes[b].y) * (nodes[a].y-nodes[b].y));
     }
 
-    double distance(Node a, Node b) {
+    double calcDistance(Node a, Node b) {
         return Math.sqrt((a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y));
+    }
+
+    double distance(int a, int b) {
+        if (b > a) {
+            return distance[b][a];
+        }
+        return distance[a][b];
     }
 
     void NNPath() {
