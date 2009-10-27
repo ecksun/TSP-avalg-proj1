@@ -9,7 +9,9 @@ public class TSP {
 
     Tour tour;
 
-    private final int neighborsToCheck = 30;
+    public final boolean DEBUG = true;
+
+    private final int neighborsToCheck = 10;
 
     public static void main (String[] argv) {
         new TSP();
@@ -19,27 +21,54 @@ public class TSP {
         this.numNodes = io.getInt();
         nodes = new Node[numNodes];
         tour = new Tour(numNodes);
-        System.err.println("readNodes();");
-        readNodes();
-        System.err.println("createDistance();");
-        createDistance();
+        long time;
+        if (DEBUG)
+            time = System.currentTimeMillis();
 
-// 
+        readNodes();
+
+        if (DEBUG) {
+            System.err.println("readNodes()         " + (System.currentTimeMillis() - time));	
+            time = System.currentTimeMillis();
+        }
+
+        createDistance();
+        if (DEBUG) {
+            System.err.println("createDistance()	" + (System.currentTimeMillis() - time));
+            time = System.currentTimeMillis();
+        }
+
+        // 
         // for (int i = 0; i < numNodes; i++) {
-            // for (int j = 0; j < numNodes; j++) {
-                // System.err.print(distance[i][j] + "\t");
-            // }
-            // System.out.println();
+        // for (int j = 0; j < numNodes; j++) {
+        // System.err.print(distance[i][j] + "\t");
+        // }
+        // System.out.println();
         // }
 
-        System.err.println("createNeighbors();");
-        createNeighbors();
-        System.err.println("NNPath();");
+        createNeighbors();  
+        if (DEBUG) {
+            System.err.println("createNeighbors()	" + (System.currentTimeMillis() - time));
+            time = System.currentTimeMillis();
+        }
+
         NNPath();
-        System.err.println("twoOpt();");
+        if (DEBUG) {
+            System.err.println("NNPath()	        " + (System.currentTimeMillis() - time));
+            time = System.currentTimeMillis();
+        }
+
         twoOpt();
-        System.err.println("printTour();");
+        if (DEBUG) {
+            System.err.println("twoOpt()	        " + (System.currentTimeMillis() - time));
+            time = System.currentTimeMillis();
+        }
+
         printTour();
+        if (DEBUG) {
+            System.err.println("printTour()	        " + (System.currentTimeMillis() - time));
+            System.err.println("tour length:  " + tour.length(this));
+        }
     }
 
     void readNodes() {
@@ -72,7 +101,7 @@ public class TSP {
                 // check if we at all want to use this node by comparing it to
                 // the node furthest away from our node
                 if (dist > distance(i, neighbors[i][neighborsToCheck-1])) {
-                    
+
                     boolean push = false;
                     int tmp = 0;
                     // Vi kollar om noden är en värdig granne
@@ -131,7 +160,7 @@ public class TSP {
                 if (!used[j] && (best == -1 || 
                             distance(tour.getNode(i-1), j) < distance(tour.getNode(i-1), best))) {
                     best = j;
-                }
+                            }
             }
             tour.addNode(best); // should be on pos i
             used[best] = true;
@@ -140,9 +169,9 @@ public class TSP {
 
     // should be done i Tour
     // void createPos() {
-        // for (int i = 0; i <  numNodes; i++) {
-            // pos[tour.getNode(i)] = i;
-        // }
+    // for (int i = 0; i <  numNodes; i++) {
+    // pos[tour.getNode(i)] = i;
+    // }
     // }
 
     /**
@@ -160,49 +189,49 @@ public class TSP {
 improve:
             for (int i = 0; i < numNodes; i++) {
                 for (int n = 0; n < neighborsToCheck; n++) {
-                    
+
                     int c1 = tour.getPos(i); // citi 1
                     int nc1 = tour.getNextNode(c1); // the next city after city 1
 
                     int c2 = neighbors[c1][n];
                     int nc2 = tour.getNextNode(c2);
-                    
+
                     if (distance(c1, nc1) + distance(c2, nc2) >
                             distance(c1, c2) + distance(nc1, nc2)) {
-                    // if (distance(tour.getPos(i), tour.getPos(i)+1) + 
-                            // distance(neighbors[pos[i]][n],pos[neighbors[pos[i]][n]]+1)
-                            // >
-                            // distance(pos[i], neighbors[pos[i]][n]) + 
-                            // distance(pos[i]+1, pos[neighbors[pos[i]][n]]+1))
-                    // {
+                        // if (distance(tour.getPos(i), tour.getPos(i)+1) + 
+                        // distance(neighbors[pos[i]][n],pos[neighbors[pos[i]][n]]+1)
+                        // >
+                        // distance(pos[i], neighbors[pos[i]][n]) + 
+                        // distance(pos[i]+1, pos[neighbors[pos[i]][n]]+1))
+                        // {
                         improvement = true;
                         reverse(nc1, c2);
                         // reverse(pos[i]+1, neighbors[pos[i]][n]);
                         continue improve;
-                    }
+                        }
 
+                            }
+                }
+            }
+        }
+
+        void reverse(int a, int b) {
+            // fungerar detta=
+            if (a > b)
+                reverse(b, a);
+            else {
+                while (a < b) {
+                    // wraparound
+                    if (a == numNodes)
+                        a = 0;
+                    if (b == 0)
+                        b = numNodes-1;
+
+                    tour.swap(a,b);
+
+                    a++;
+                    b--;
                 }
             }
         }
     }
-
-    void reverse(int a, int b) {
-        // fungerar detta=
-        if (a > b)
-            reverse(b, a);
-        else {
-            while (a < b) {
-                // wraparound
-                if (a == numNodes)
-                    a = 0;
-                if (b == 0)
-                    b = numNodes-1;
-
-                tour.swap(a,b);
-
-                a++;
-                b--;
-            }
-        }
-    }
-}

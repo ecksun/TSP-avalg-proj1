@@ -17,4 +17,4 @@ test: all
 
 
 submit: clean tsp
-	./submit.py -f -p tsp TSP.java Node.java Kattio.java
+	./submit.py -f -p tsp TSP.java Node.java Kattio.java Tour.java
