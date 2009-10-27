@@ -141,25 +141,26 @@ void TSP::oneToN() {
  * förbättringar med de närmaste grannarna ås kanske vi kan hinna :)
  */
 void TSP::twoOpt() {
-std:multimap<float, short int>::iterator it;
+    std::multimap<float, short int>::iterator it;
 improve:
     bool improvement = true;
     while (improvement) {
         improvement = false;
-        for (int i = 0; i < numNodes; i++) {
-            for (it = neighbor[pos[i]].begin();
-                    it != neighbors[pos[i]].end() &&
+        for (short unsigned int i, n  = 0; i < numNodes; i++) {
+            for (it = neighbors[(*pos)[i]]->begin();
+                    it != neighbors[(*pos)[i]]->end() &&
                     n  != neighborsToCheck; it++, n++)
             {
                 if (
-                        distance(pos[i], pos[i]+1) + 
-                        distance(pos[it->second], pos[it->second]+1)
+                        distance((*pos)[i], (*pos)[i]+1) + 
+                        distance((*pos)[it->second], (*pos)[it->second]+1)
                         >
-                        distance(pos[i], pos[it->second]) +
-                        distance(pos[i]+1, pos[it->second]+1))
+                        distance((*pos)[i], (*pos)[it->second]) +
+                        distance((*pos)[i]+1, (*pos)[it->second]+1))
                 {
                     improvement = true;
-                    reverse(pos[i], pos[it->second]);
+                    reverse((*pos)[i], (*pos)[it->second]);
+                    goto improve;
                 }
             }
         }
@@ -171,15 +172,14 @@ void TSP::reverse(int i, int j) {
         reverse(j, i);
         return;
     }
-    int c1;
-    int c2;
+    short unsigned int c1, c2;
     while (i < j) {
-        c1 = tour[i];
-        c2 = tour[j];
-        tour[i] = c2;
-        tour[j] = c1;
-        pos[c1] = j;
-        pos[c2] = i;
+        c1 = (*tour)[i];
+        c2 = (*tour)[j];
+        (*tour)[i] = c2;
+        (*tour)[j] = c1;
+        (*pos)[c1] = j;
+        (*pos)[c2] = i;
         i++; 
         j--;
     }

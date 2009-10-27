@@ -11,7 +11,7 @@ struct TSP {
     int const numNodes;
     static const unsigned int neighborsToCheck = 100; // Perhaps pre-processing konstant (#define) ?
 
-    short int * pos[];
+    short unsigned int * pos[];
 
     std::vector<node *> nodes;
 
@@ -38,6 +38,8 @@ struct TSP {
     void oneToN();
 
     void twoOpt();
+    void reverse(int, int);
+
 
     float distance(int, int) const;
 };
