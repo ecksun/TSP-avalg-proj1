@@ -40,6 +40,8 @@ struct TSP {
     void twoOpt();
     void reverse(int, int);
 
+    void threeOpt();
+    void assignNodes3Opt(int nodes[]);
 
     float distance(int, int) const;
 };

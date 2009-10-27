@@ -1,5 +1,6 @@
 #include "tsp.h"
 #include "tour.h"
+#include <cstdlib>
 #include <iostream>
 #include <math.h>
 #include <assert.h>
@@ -187,6 +188,45 @@ void TSP::reverse(int i, int j) {
     }
 }
 
+
+
+void TSP::threeOpt() {
+    int nodes[6];
+
+    assignNodes3Opt(nodes);
+
+    for (int i = 0; i < 6; i++) {
+        std::cout << nodes[i] << " ";
+    }
+
+
+}
+
+/**
+ * Selects which nodes to operate on and assigns the values.
+ */
+void assignNodes3Opt(int & nodes[]) {
+    for (int i = 0; i < numNodes; i++) {
+        bool used = false;
+        int newNode = 0;
+
+        while (used) {
+            newNode = rand() / (RAND_MAX / numNodes);
+
+            for (int j = 0; j < i; j++) {
+                if (nodes[j] == node) {
+                    used = true;
+                    break;
+                }
+            }
+        }
+
+        nodes[i] = newNode;
+    }
+}
+
+
+
 void TSP::printTour() {
     std::cout << (*tour);
 }
@@ -216,6 +256,8 @@ int main() {
 
     std::cerr << "oneToN() done" << std::endl;
     tsp.greedyPath();
+
+    tsp.createPos();
 
     std::cerr << "greedyPath() done" << std::endl;
 
