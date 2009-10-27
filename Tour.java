@@ -8,6 +8,12 @@ class Tour {
     private int[] nodes;
 
     /**
+     * A vector keeping track of in which position a given node
+     * occurs, where both are indices starting at zero.
+     */
+    private int[] positions;
+
+    /**
      * An integer that knows where to insert next. 
      * This equals current number of inserted nodes.
      */
@@ -19,21 +25,27 @@ class Tour {
      */
     Tour(int capacity) {
         nodes = new int[capacity];
+        positions = new int[capacity];
         currNumAddedNodes = 0;
     }
 
     /**
      * Adds a node index to this tour.
-     * @param index The index to add
+     *
+     * @param nodeIndex The node index to add
      */
-    void addNode(int index) {
-        nodes[currNumAddedNodes++] = index;
+    void addNode(int nodeIndex) {
+        nodes[currNumAddedNodes] = nodeIndex;
+        positions[nodeIndex] = currNumAddedNodes;
+
+        currNumAddedNodes++;
         return;
     }
 
     /**
      * Returns the node index at the specified position index of the
      * tour, both starting with zero.
+     *
      * @param posIndex The position index (0: first node)
      * @return -1 if index out of bounds, otherwise the node index
      */
@@ -69,14 +81,7 @@ class Tour {
      * @return the position index, or -1 if not found
      */
     int getPos(int nodeIndex) {
-        // TODO: optimize this naive approach
-        for (int posIndex = 0; posIndex < currNumAddedNodes; posIndex++) {
-            if (nodes[posIndex] == nodeIndex) {
-                return nodeIndex;
-            }
-        }
-
-        return -1;
+        return positions[nodeIndex];
     }
 
     /**
