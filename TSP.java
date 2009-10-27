@@ -6,6 +6,7 @@ public class TSP {
     double[][] neighbors;
 
     int tour[];
+    int pos[];
 
     private final int neighborsToCheck = 30;
 
@@ -17,6 +18,7 @@ public class TSP {
         this.numNodes = io.getInt();
         nodes = new Node[numNodes];
         tour = new int[numNodes];
+        pos = new int[numNodes];
         readNodes();
         createNeighbors();
     }
@@ -95,5 +97,16 @@ public class TSP {
         for (int i = 0; i <  numNodes; i++) {
             pos[tour[i]] = i;
         }
+    }
+
+    void printTour() {
+        for (int i : tour) {
+            System.out.println(i);
+        }
+    }
+
+
+    void twoOpt() {
+
     }
 }
