@@ -134,6 +134,22 @@ improve:
     }
 
     void reverse(int a, int b) {
-        
+        // fungerar detta=
+        if (a > b)
+            reverse(b, a);
+        else {
+            while (a < b) {
+                // wraparound
+                if (a == numNodes)
+                    a = 0;
+                if (b == 0)
+                    b = numNodes-1;
+
+                swap(a,b);
+
+                a++;
+                b--;
+            }
+        }
     }
 }
