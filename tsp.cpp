@@ -74,7 +74,7 @@ float TSP::distance(const int a, const int b) const {
  */
 void TSP::createPos() {
     for (int i = 0; i < numNodes; i++) {
-        (*pos)[tour[i]] = i;
+        (*pos)[(*tour)[i]] = i;
     }
 }
 
