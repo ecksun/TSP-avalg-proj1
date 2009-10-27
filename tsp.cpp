@@ -129,13 +129,64 @@ void TSP::oneToN() {
 
 /**
  * Performs the 2-opt local search.
+ *
+ * Testa kör tills vi inte kan förbättra något mer
+ *
+ * om vi bara sätter i = 0 när vi har en förbättring så får vi TLE
+ *
+ * Kan testa att varje gång vi hittar en förbättring sätter vi en bool till true
+ * så att när vi har loopat igenom i->n så gör vi det igen, tills vi inte har några förbättringar kvar
+ *
+ * En uppsnabbning man kan göra är med grannlistor, som man kalkylerar i början och sedan bara gör 
+ * förbättringar med de närmaste grannarna ås kanske vi kan hinna :)
  */
 void TSP::twoOpt() {
+std:multimap<float, short int>::iterator it;
+improve:
+    bool improvement = true;
+    while (improvement) {
+        improvement = false;
+        for (int i = 0; i < numNodes; i++) {
+            for (it = neighbor[pos[i]].begin();
+                    it != neighbors[pos[i]].end() &&
+                    n  != neighborsToCheck; it++, n++)
+            {
+                if (
+                        distance(pos[i], pos[i]+1) + 
+                        distance(pos[it->second], pos[it->second]+1)
+                        >
+                        distance(pos[i], pos[it->second]) +
+                        distance(pos[i]+1, pos[it->second]+1))
+                {
+                    improvement = true;
+                    reverse(pos[i], pos[it->second]);
+                }
+            }
+        }
+    }
+}
 
+void TSP::reverse(int i, int j) {
+    if (i > j) {
+        reverse(j, i);
+        return;
+    }
+    int c1;
+    int c2;
+    while (i < j) {
+        c1 = tour[i];
+        c2 = tour[j];
+        tour[i] = c2;
+        tour[j] = c1;
+        pos[c1] = j;
+        pos[c2] = i;
+        i++; 
+        j--;
+    }
 }
 
 void TSP::printTour() {
-    std::cout << tour;
+    std::cout << (*tour);
 }
 
 float TSP::tourLength() {
@@ -158,8 +209,8 @@ int main() {
 
     // dont forget to init tour somewhere
 
-    
-//    tsp.oneToN();
+
+    //    tsp.oneToN();
 
     std::cerr << "oneToN() done" << std::endl;
     tsp.greedyPath();
