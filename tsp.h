@@ -1,24 +1,28 @@
 #ifndef TSP_HEADER
 #define TSP_HEADER
+#include "node.h"
+#include "tour.h"
 #include <map>
 #include <vector>
-#include "node.h"
+
+class Tour; // forward declaration -- fult?
 
 struct TSP {
     int const numNodes;
     static const unsigned int neighborsToCheck = 100; // Perhaps pre-processing konstant (#define) ?
 
-
     short int * pos[];
-
 
     std::vector<node *> nodes;
 
-    std::vector<short int> tour;
+    Tour * tour;
 
     std::vector<std::multimap<float, short int> *> neighbors;
 
-    TSP(int nodes) : numNodes(nodes) {}
+    public:
+
+    TSP(int nodes);
+    ~TSP();
 
     void init();
     
@@ -33,6 +37,8 @@ struct TSP {
     void greedyPath();
     void oneToN();
 
-    float distance(int, int);
+    void twoOpt();
+
+    float distance(int, int) const;
 };
 #endif

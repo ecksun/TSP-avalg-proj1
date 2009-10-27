@@ -1,8 +1,26 @@
 #include "tsp.h"
+#include "tour.h"
 #include <iostream>
 #include <math.h>
 #include <assert.h>
+#include <stdio.h>
 #define DEBUG 1
+
+
+/**
+ * Constructs a new TSP instance
+ */
+TSP::TSP(int nodes) : numNodes(nodes) {
+    tour = new Tour();
+}
+
+/**
+ * Destructs this TSP instance.
+ */
+TSP::~TSP() {
+    delete tour;
+}
+
 
 /*
  * Läser in alla noder och lägger dem i nodes[]
@@ -41,7 +59,7 @@ void TSP::createNeighbors() {
 /*
  * Räknar ut avståndet mellan de två noderna a och b
  */
-float TSP::distance(const int a, const int b) {
+float TSP::distance(const int a, const int b) const {
     return sqrt(pow((nodes[b]->x - nodes[a]->x), 2) + pow((nodes[b]->y - nodes[a]->y),2));
 }
 
@@ -82,10 +100,10 @@ void TSP::greedyPath() {
     // and tour to 0;
     for (int i = 0; i < numNodes; i++) {
         used[i] = false;
-        tour.push_back(0); 
+        tour->add(0); 
     }
 
-    tour[0] = 0;
+    (*tour)[0] = 0;
     used[0] = true;
     int best;
 
@@ -93,37 +111,36 @@ void TSP::greedyPath() {
         best = -1;
         for (int j = 0; j < numNodes; j++) {
             if (!used[j]) {
-                if (best == -1 || (distance(tour[i-1], j) < distance(tour[i-1], best))) {
+                if (best == -1 || (distance((*tour)[i-1], j) < distance((*tour)[i-1], best))) {
                     best = j;
                 }
             }
         }
-        tour[i] = best;
+        (*tour)[i] = best;
         used[best] = true;
     }
 }
 
 void TSP::oneToN() {
     for (int i = 0; i < numNodes; i++) {
-        tour.push_back(i);
+        tour->add(i);
     }
+}
+
+/**
+ * Performs the 2-opt local search.
+ */
+void TSP::twoOpt() {
+
 }
 
 void TSP::printTour() {
-    for (int i = 0; i < numNodes; i++) {
-        std::cout << tour[i] << std::endl;
-    }
+    std::cout << tour;
 }
 
 float TSP::tourLength() {
-    float sum = 0;
-    for (int i = 1; i < numNodes; i++) {
-        sum += distance(tour[i-1], tour[i]);
-    }
-    sum += distance(tour[0], tour[numNodes-1]);
-    return sum;
+    return tour->length(*this);
 }
-
 
 int main() {
     int nodes;
@@ -141,14 +158,17 @@ int main() {
 
     // dont forget to init tour somewhere
 
-    // tsp.greedyPath();
-
-    // tsp.oneToN();
+    
+//    tsp.oneToN();
 
     std::cerr << "oneToN() done" << std::endl;
     tsp.greedyPath();
 
     std::cerr << "greedyPath() done" << std::endl;
+
+    // perform local search optimization
+    tsp.twoOpt();
+    std::cerr << "optimization done" << std::endl;
 
     tsp.printTour();
 
