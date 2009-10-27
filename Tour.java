@@ -61,15 +61,12 @@ class Tour {
      * Returns the node index of the node that has the position index
      * right after the one specified.
      *
-     * @param posIndex the position index after which to get the next
-     * @return the node index if in bounds, otherwise -1
+     * @param posIndex the position index after which to get the next node from,
+     * if posIndex is equal to the size of the tour it equalizes with it being 0
+     * @return the node index if  
      */
     int getNextNode(int posIndex) {
-        try {
-            return nodes[posIndex+1];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return -1;
-        }
+        return nodes[(posIndex+1)%currNumAddedNodes];
     }
 
 

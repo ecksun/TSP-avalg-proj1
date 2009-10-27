@@ -4,6 +4,7 @@ all: tsp
 clear:
 	clear
 
+clean:
 
 tsp:
 	javac TSP.java

@@ -19,9 +19,27 @@ public class TSP {
         this.numNodes = io.getInt();
         nodes = new Node[numNodes];
         tour = new Tour(numNodes);
+        System.err.println("readNodes();");
         readNodes();
+        System.err.println("createDistance();");
         createDistance();
+
+// 
+        // for (int i = 0; i < numNodes; i++) {
+            // for (int j = 0; j < numNodes; j++) {
+                // System.err.print(distance[i][j] + "\t");
+            // }
+            // System.out.println();
+        // }
+
+        System.err.println("createNeighbors();");
         createNeighbors();
+        System.err.println("NNPath();");
+        NNPath();
+        System.err.println("twoOpt();");
+        twoOpt();
+        System.err.println("printTour();");
+        printTour();
     }
 
     void readNodes() {
@@ -31,6 +49,7 @@ public class TSP {
     }
 
     void createDistance() {
+        distance = new double[numNodes][numNodes];
         for (int i = 0; i < numNodes; i++) {
             for (int j = i; j < numNodes; j++) {
                 distance[i][j] = calcDistance(i,j);
@@ -91,9 +110,11 @@ public class TSP {
     }
 
     double distance(int a, int b) {
-        if (b > a) {
+        if (b < a) {
+            // System.err.printf("distance(%d, %d) = %f\n", a, b, distance[b][a]);
             return distance[b][a];
         }
+        // System.err.printf("distance(%d, %d) = %f\n", a, b, distance[a][b]);
         return distance[a][b];
     }
 
@@ -128,9 +149,7 @@ public class TSP {
      * Vi kanske kan tjäna lite hastighet här genom att buffra outputen
      */
     void printTour() {
-        for (int i = 0; i < numNodes; i++) {
-            System.out.println(i);
-        }
+        System.out.println(tour);
     }
 
 
@@ -179,7 +198,7 @@ improve:
                 if (b == 0)
                     b = numNodes-1;
 
-                swap(a,b);
+                tour.swap(a,b);
 
                 a++;
                 b--;
