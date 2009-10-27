@@ -3,7 +3,7 @@ public class TSP {
     Kattio io;
     int numNodes;
     Node[] nodes;
-    double[][] neighbors;
+    int[][] neighbors;
 
     double[][] distance;
 
@@ -43,22 +43,23 @@ public class TSP {
      * TODO fungerar den?
      */
     void createNeighbors() {
-        neighbors =  new double[numNodes][neighborsToCheck];
+        neighbors =  new int[numNodes][neighborsToCheck];
 
         for (int i = 0; i < numNodes; i++) {
             // Möjlig optimering, sätt n = i 
             for (int n = 0; n < numNodes; n++) {
                 double dist = distance(nodes[i], nodes[n]);
 
-                // check if we at all want to use this node
-                if (dist > neighbors[i][neighborsToCheck-1]) {
+                // check if we at all want to use this node by comparing it to
+                // the node furthest away from our node
+                if (dist > distance(i, neighbors[i][neighborsToCheck-1])) {
                     
                     boolean push = false;
                     double tmp = 0;
                     // Vi kollar om noden är en värdig granne
                     for (int j = 0; j < neighborsToCheck; j++) {
                         // om den är en värdig granne, sätt in den 
-                        if (neighbors[i][j] < dist) {
+                        if (distance(i, neighbors[i][j]) < dist) {
                             push = true;
                             tmp = neighbors[i][j];
                             neighbors[i][j] = dist;
