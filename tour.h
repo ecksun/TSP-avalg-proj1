@@ -10,19 +10,19 @@
 struct TSP; // forward declaration -- fult?
 
 class Tour {
-    std::vector<short unsigned int> * nodes;
+    std::vector<int> * nodes;
 
     public:
 
     Tour();
     ~Tour();
 
-    void add(short unsigned int);
-    short unsigned int get(short unsigned int) const;
+    void add(int);
+    int get(int) const;
     float length(const TSP &) const;
     int numNodes() const;
 
-    short unsigned int & operator[](short unsigned int);
+    int & operator[](int);
 };
 
 std::ostream & operator<<(std::ostream &, const Tour &);

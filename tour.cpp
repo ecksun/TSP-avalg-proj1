@@ -2,7 +2,7 @@
 #include <iostream>
 
 Tour::Tour() {
-    nodes = new std::vector<short unsigned int>();
+    nodes = new std::vector<int>();
 }
 
 Tour::~Tour() {
@@ -13,14 +13,14 @@ Tour::~Tour() {
  * Adds the specified node index at the end of this tour, after its
  * current last node.
  */
-void Tour::add(short unsigned int i) {
+void Tour::add(int i) {
     nodes->push_back(i);
 }
 
 /**
  * Returns the node at index i of this tour.
  */
-short unsigned int Tour::get(short unsigned int i) const {
+int Tour::get(int i) const {
     return (*nodes)[i];
 }
 
@@ -31,7 +31,7 @@ short unsigned int Tour::get(short unsigned int i) const {
 float Tour::length(const TSP & tsp) const {
     float sum = 0;
 
-    for (short unsigned int i = 1; i < nodes->size(); i++) {
+    for (int i = 1; i < nodes->size(); i++) {
         sum += tsp.distance((*nodes)[i-1], (*nodes)[i]);
     }
 
@@ -51,7 +51,7 @@ int Tour::numNodes() const {
  *
  * TODO: is this working?
  */
-short unsigned int & Tour::operator[](short unsigned int i) {
+int & Tour::operator[](int i) {
     return (*nodes)[i];
 }
 
