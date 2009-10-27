@@ -11,6 +11,8 @@ struct TSP {
     int const numNodes;
     static const unsigned int neighborsToCheck = 100; // Perhaps pre-processing konstant (#define) ?
 
+    short int * pos[];
+
     std::vector<node *> nodes;
 
     Tour * tour;
@@ -29,6 +31,8 @@ struct TSP {
 
     void createNeighbors();
     void printNeighbors();
+
+    void createPos();
 
     void greedyPath();
     void oneToN();

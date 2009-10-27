@@ -2,6 +2,9 @@
 
 Vi bör också ha kvar alla olika startfall (tex) så vi i framtiden lättare kan kombinera olika startfall med olika optimeringar. typ greedy och 2opt, 0-n och 3-opt, random och Lin-Kernighan etc etc :)
 
+<> och hur mycket den ska spara är (d(1,2) + d(2,3) + d(4,5) + d(5,6)) -
+                          (d(1,5)+d(5,3)+d(4,2)+d(2,6))
+                           
 <h1>Travelling Salesperson 2D</h1>
 <pre>
 Problem id: tsp

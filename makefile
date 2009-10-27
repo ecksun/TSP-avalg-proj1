@@ -20,4 +20,4 @@ test: all
 
 
 submit: clean tsp
-	./submit.py -f -p tsp tsp.h node.h tsp.cpp
+	./submit.py -f -p tsp node.h tour.h tour.cpp tsp.h tsp.cpp 
