@@ -1,8 +1,11 @@
+import java.lang.Math;
 public class TSP {
     Kattio io;
     int numNodes;
     Node[] nodes;
     double[][] neighbors;
+
+    int tour[];
 
     private final int neighborsToCheck = 30;
 
@@ -13,13 +16,14 @@ public class TSP {
         io = new Kattio(System.in);
         this.numNodes = io.getInt();
         nodes = new Node[numNodes];
+        tour = new int[numNodes];
         readNodes();
         createNeighbors();
     }
 
     void readNodes() {
         for (int i = 0; i < numNodes; i++) {
-            nodes[i] = new Node(i, io.getDouble(), io.getDouble());
+            nodes[i] = new Node(io.getDouble(), io.getDouble());
         }
     }
 
@@ -60,6 +64,30 @@ public class TSP {
                     break;
                 }
             }
+        }
+    }
+
+    double distance(Node a, Node b) {
+        return Math.sqrt((a.x-b.x) * (a.x-b.x) + (a.y-b.y) * (a.y-b.y));
+    }
+
+    void NNPath() {
+        boolean used[numNodes];
+        int best;
+
+        tour.add(0);
+        used[0] = true;
+
+        for (int i = 1; i < numNodes; i++) {
+            best = -1;
+            for (int j = 0; j < numNodes; j++) {
+                if (!used[j] && (best == -1 || 
+                            distance(tour[i-1], j) < distance(tour[i-1], best)) {
+                    best = j;
+                }
+            }
+            tour[i] = best;
+            used[best] = true;
         }
     }
 }
