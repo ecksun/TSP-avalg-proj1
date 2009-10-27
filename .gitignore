@@ -6,3 +6,4 @@ a.out
 .settings/
 *.swp
 Debug/
+*.class
