@@ -4,6 +4,8 @@
 #include "tsp.h"
 #include <vector>
 
+struct TSP; // forward declaration -- fult?
+
 class Tour {
     std::vector<short int> * nodes;
 

@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 
+class Tour; // forward declaration -- fult?
+
 struct TSP {
     int const numNodes;
     static const unsigned int neighborsToCheck = 100; // Perhaps pre-processing konstant (#define) ?
@@ -33,6 +35,6 @@ struct TSP {
 
     void twoOpt();
 
-    float distance(int, int);
+    float distance(int, int) const;
 };
 #endif

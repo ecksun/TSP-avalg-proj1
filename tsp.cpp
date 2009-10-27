@@ -3,6 +3,7 @@
 #include <iostream>
 #include <math.h>
 #include <assert.h>
+#include <stdio.h>
 #define DEBUG 1
 
 
@@ -58,7 +59,7 @@ void TSP::createNeighbors() {
 /*
  * Räknar ut avståndet mellan de två noderna a och b
  */
-float TSP::distance(const int a, const int b) {
+float TSP::distance(const int a, const int b) const {
     return sqrt(pow((nodes[b]->x - nodes[a]->x), 2) + pow((nodes[b]->y - nodes[a]->y),2));
 }
 
