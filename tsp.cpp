@@ -12,6 +12,7 @@
  */
 TSP::TSP(int nodes) : numNodes(nodes) {
     tour = new Tour();
+    pos = new short unsigned int[numNodes];
 }
 
 /**
@@ -19,6 +20,7 @@ TSP::TSP(int nodes) : numNodes(nodes) {
  */
 TSP::~TSP() {
     delete tour;
+    delete[] pos;
 }
 
 
