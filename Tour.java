@@ -85,6 +85,21 @@ class Tour {
     }
 
     /**
+     * Swap places on two nodes in the tour
+     * @param a One of the nodes to change place 
+     * @param b The other node to change place
+     */
+    void swap (int a, int b) {
+        int tmp1 = nodes[a];
+        int tmp2 = nodes[b];
+        nodes[a] = tmp2;
+        nodes[b] = tmp1;
+        positions[tmp1] = b;
+        positions[tmp2] = a;
+
+    }
+
+    /**
      * Returns the total length of this tour.
      *
      * @param tsp the TSP instance with distance method
@@ -124,5 +139,6 @@ class Tour {
 
         return sb.toString();
     }
+
 
 }

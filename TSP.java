@@ -48,21 +48,21 @@ public class TSP {
         for (int i = 0; i < numNodes; i++) {
             // Möjlig optimering, sätt n = i 
             for (int n = 0; n < numNodes; n++) {
-                double dist = distance(nodes[i], nodes[n]);
+                double dist = distance(i, n);
 
                 // check if we at all want to use this node by comparing it to
                 // the node furthest away from our node
                 if (dist > distance(i, neighbors[i][neighborsToCheck-1])) {
                     
                     boolean push = false;
-                    double tmp = 0;
+                    int tmp = 0;
                     // Vi kollar om noden är en värdig granne
                     for (int j = 0; j < neighborsToCheck; j++) {
                         // om den är en värdig granne, sätt in den 
                         if (distance(i, neighbors[i][j]) < dist) {
                             push = true;
                             tmp = neighbors[i][j];
-                            neighbors[i][j] = dist;
+                            neighbors[i][j] = n;
                         }
                         // och flytta allt annat till höger
                         if (push) {
@@ -185,15 +185,5 @@ improve:
                 b--;
             }
         }
-    }
-
-    void swap(int a, int b) {
-        int tmp1 = tour[a];
-        int tmp2 = tour[b];
-        tour[a] = tmp2;
-        tour[b] = tmp1;
-        pos[tmp1] = b;
-        pos[tmp2] = a;
-
     }
 }
