@@ -1,7 +1,7 @@
 class Node {
 
-    public float x;
-    public float y;
+    public double x;
+    public double y;
 
     /**
      * Constructs a new node.
@@ -9,7 +9,7 @@ class Node {
      * @param x The x coordinate
      * @param y The y coordinate
      */
-    Node(float x, float y) {
+    Node(double x, double y) {
         this.x = x;
         this.y = y;
     }
