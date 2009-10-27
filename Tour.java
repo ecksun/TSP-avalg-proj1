@@ -88,9 +88,12 @@ class Tour {
     }
 
     /**
-     * Swap places on two nodes in the tour
-     * @param a One of the nodes to change place 
-     * @param b The other node to change place
+     * Swap places on two node indices in the tour
+     * @param a One of the node indices to change place 
+     * @param b The other node index to change place
+     * TODO: review this after changing to correct variable names.
+     * I fear that the code might be borken, because of mixing 
+     * of node indices and position indices.
      */
     void swap (int a, int b) {
         if (a == b) 

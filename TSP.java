@@ -101,6 +101,7 @@ public class TSP {
                 // check if we at all want to use this node by comparing it to
                 // the node furthest away from our node
                 if (dist > distance(i, neighbors[i][neighborsToCheck-1])) {
+                    // TODO: dist större än?
 
                     boolean push = false;
                     int tmp = 0;
@@ -114,6 +115,7 @@ public class TSP {
                         }
                         // och flytta allt annat till höger
                         if (push) {
+                            // TODO: borken?
                             tmp = neighbors[i][j];
                             neighbors[i][j] = tmp;
                         }
