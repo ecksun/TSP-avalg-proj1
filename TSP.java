@@ -5,8 +5,9 @@ public class TSP {
     Node[] nodes;
     double[][] neighbors;
 
-    int tour[];
     int pos[];
+
+    Tour tour;
 
     private final int neighborsToCheck = 30;
 
@@ -17,7 +18,7 @@ public class TSP {
         io = new Kattio(System.in);
         this.numNodes = io.getInt();
         nodes = new Node[numNodes];
-        tour = new int[numNodes];
+        tour = new Tour(numNodes);
         pos = new int[numNodes];
         readNodes();
         createNeighbors();
@@ -74,28 +75,28 @@ public class TSP {
     }
 
     void NNPath() {
-        boolean used[numNodes];
+        boolean used[] = new boolean[numNodes];
         int best;
 
-        tour.add(0);
+        tour.addNode(0);
         used[0] = true;
 
         for (int i = 1; i < numNodes; i++) {
             best = -1;
             for (int j = 0; j < numNodes; j++) {
                 if (!used[j] && (best == -1 || 
-                            distance(tour[i-1], j) < distance(tour[i-1], best)) {
+                            distance(tour.getNode(i-1), j) < distance(tour.getNode(i-1), best))) {
                     best = j;
                 }
             }
-            tour[i] = best;
+            tour.addNode(best); // should be on pos i
             used[best] = true;
         }
     }
 
     void createPos() {
         for (int i = 0; i <  numNodes; i++) {
-            pos[tour[i]] = i;
+            pos[tour.getNode(i)] = i;
         }
     }
 
@@ -103,7 +104,7 @@ public class TSP {
      * Vi kanske kan tjäna lite hastighet här genom att buffra outputen
      */
     void printTour() {
-        for (int i : tour) {
+        for (int i = 0; i < numNodes; i++) {
             System.out.println(i);
         }
     }
