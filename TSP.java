@@ -11,7 +11,7 @@ public class TSP {
 
     public final boolean DEBUG = true;
 
-    private final int neighborsToCheck = 10;
+    private final int neighborsToCheck = 25;
 
     public static void main (String[] argv) {
         new TSP();
@@ -135,9 +135,6 @@ public class TSP {
     }
 
     double distance(int a, int b) {
-        if (a == b) {
-            return -1;
-        }
         if (b < a) {
             // System.err.printf("distance(%d, %d) = %f\n", a, b, distance[b][a]);
             return distance[b][a];
@@ -187,12 +184,16 @@ public class TSP {
             improvement = false;
 improve:
             for (int i = 0; i < numNodes; i++) {
-                int c1 = tour.getPos(i); // citi 1
-                int nc1 = tour.getNextNode(c1); // the next city after city 1
+                int c1 = tour.getNode(i); // citi 1
+                int nc1 = tour.getNode(i+1); // the next city after city 1
 
                 for (int n = 0; n < neighborsToCheck; n++) {
+                    // if (c1 == n)
+                        // continue;
                     int c2 = neighbors[c1][n];
-                    int nc2 = tour.getNextNode(c2);
+                    int nc2 = tour.getNextNode(tour.getPos(c2));
+                    
+                    // printTour();
 
                     if (distance(c1, nc1) + distance(c2, nc2) >
                             distance(c1, c2) + distance(nc1, nc2)) {
@@ -202,10 +203,27 @@ improve:
                         // distance(pos[i], neighbors[pos[i]][n]) + 
                         // distance(pos[i]+1, pos[neighbors[pos[i]][n]]+1))
                         // {
-                        System.err.println("Före: " + tour.length(this));
+                        System.err.printf("Working with c1(%d), nc1(%d), c2(%d), nc2(%d)\n", c1, nc1, c2, nc2);
+                        System.err.printf("Före (%d, %d): %s\n", nc1, c2, tour.length(this));
                         improvement = true;
+
+                        
+                        // Det utkommenderande nedan är hesselbys kod
+                        // int ai = tour.getPos(nc1);
+                        // int bi = tour.getPos(c2);
+                        // int amli = tour.getPos(tour.getPrevNode(nc1));
+                        // int bpli = tour.getPos(tour.getNextNode(c2));
+// 
+// 
+                        // if (Math.abs(bi - ai) < Math.abs(bpli - amli)) {
+                            // reverse(ai, bi);
+                        // }
+                        // else {
+                            // reverse(bpli, amli);
+                        // }
+
                         reverse(nc1, c2);
-                        System.err.println("Efter: " + tour.length(this));
+                        System.err.printf("efter (%d, %d): %s\n", nc1, c2, tour.length(this));
                         // reverse(pos[i]+1, neighbors[pos[i]][n]);
                         continue improve;
                     }
@@ -220,6 +238,7 @@ improve:
         if (a > b)
             reverse(b, a);
         else {
+        System.err.printf("Före: (%d, %d)\t \n%s", a, b, tour);
             while (a < b) {
                 // wraparound
                 if (a == numNodes)
@@ -232,6 +251,35 @@ improve:
                 a++;
                 b--;
             }
+        System.err.printf("efter: (%d, %d)\t \n%s", a, b, tour);
         }
     }
+    /*
+     * hesselbys kod
+     */
+    // void reverse(int start, int end)
+    // {
+        // //System.err.println("reverse\t"+start+"\t"+end);
+        // int len = end - start;
+// 
+        // if (len < 0) // vi har en wraparound
+        // {
+            // len += numNodes;
+        // }
+// 
+        // len = (len+1)/2; // vi behöver bara swappa "hälften av längden" ggr, eftersom vi tar 2 element per swap (+1 för att inte udda antal element ska lämnas kvar)
+// 
+        // for (int k = 0; k < len; k++)
+        // {
+            // tour.swap(start, end);
+// 
+            // // wraparound för start & end
+            // if (++start == numNodes)
+                // start = 0;
+// 
+            // if (--end <= 0)
+                // end = numNodes-1;
+        // }
+    // }
+
 }

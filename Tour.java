@@ -50,11 +50,11 @@ class Tour {
      * @return -1 if index out of bounds, otherwise the node index
      */
     int getNode(int posIndex) {
-        try {
-            return nodes[posIndex];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return -1;
-        }
+        // try {
+            return nodes[posIndex%currNumAddedNodes];
+        // } catch (ArrayIndexOutOfBoundsException e) {
+            // return -1;
+        // }
     }
 
     /**
@@ -69,6 +69,12 @@ class Tour {
         return nodes[(posIndex+1)%currNumAddedNodes];
     }
 
+    int getPrevNode(int posIndex) {
+        if (posIndex == 0)
+            return nodes[currNumAddedNodes-1];
+        else
+            return nodes[posIndex];
+    }
 
     /**
      * Returns the position (order in this tour) index, starting with
