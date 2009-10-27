@@ -99,6 +99,9 @@ public class TSP {
         }
     }
 
+    /**
+     * Vi kanske kan tjäna lite hastighet här genom att buffra outputen
+     */
     void printTour() {
         for (int i : tour) {
             System.out.println(i);
@@ -107,6 +110,30 @@ public class TSP {
 
 
     void twoOpt() {
+        boolean improvement = true;
+        while (improvement) {
+            improvement = false;
+improve:
+            for (int i = 0; i < numNodes; i++) {
+                for (int n = 0; n < neighborsToCheck; n++) {
+                    
+                    if (distance(pos[i], pos[i]+1) + 
+                            distance(neighbors[pos[i]][n],pos[neighbors[pos[i]][n]]+1)
+                            >
+                            distance(pos[i], neighbors[pos[i]][n]) + 
+                            distance(pos[i]+1, pos[neighbors[pos[i]][n]]+1))
+                    {
+                        improvement = true;
+                        reverse(pos[i]+1, neighbors[pos[i]][n]);
+                        continue improve;
+                    }
 
+                }
+            }
+        }
+    }
+
+    void reverse(int a, int b) {
+        
     }
 }
