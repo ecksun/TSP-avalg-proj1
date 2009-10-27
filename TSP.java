@@ -90,4 +90,10 @@ public class TSP {
             used[best] = true;
         }
     }
+
+    void createPos() {
+        for (int i = 0; i <  numNodes; i++) {
+            pos[tour[i]] = i;
+        }
+    }
 }
