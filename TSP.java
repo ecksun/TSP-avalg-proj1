@@ -10,9 +10,9 @@ public class TSP {
 
     Tour tour;
 
-    public final int DEBUG = 1;
+    public final int DEBUG = 0;
 
-    private int neighborsToCheck = 7;
+    private int neighborsToCheck = 10;
 
     private void dbg(Object o) {
         if (DEBUG > 2) {
@@ -210,12 +210,12 @@ improve: // restart
 
                     if (distance(c1, nc1) + distance(c2, nc2) >
                             distance(c1, c2) + distance(nc1, nc2)) {
-                        dbg(String.format("Working with c1(%d), nc1(%d), c2(%d), nc2(%d)\n", c1, nc1, c2, nc2));
-                        dbg(String.format("Före (%d, %d): %s\n", nc1, c2, tour.length(this)));
+//                        dbg(String.format("Working with c1(%d), nc1(%d), c2(%d), nc2(%d)\n", c1, nc1, c2, nc2));
+//                        dbg(String.format("Före (%d, %d): %s\n", nc1, c2, tour.length(this)));
                         improvement = true;
 
                         reverse(tour.getPos(nc1), tour.getPos(c2));
-                        dbg(String.format("efter (%d, %d): %s\n", nc1, c2, tour.length(this)));
+//                        dbg(String.format("efter (%d, %d): %s\n", nc1, c2, tour.length(this)));
                         
                         continue improve;
                     }
@@ -225,27 +225,29 @@ improve: // restart
         }
     }
 
-    void reverse(int a, int b) {
-        // fungerar detta=
-        if (a > b)
-            reverse(b, a);
-        else {
-            dbg(String.format("Före: (%d, %d)\t \n%s", a, b, tour));
+    public void reverse(int start, int end)
+    {
+        //System.err.println("reverse\t"+start+"\t"+end);
+        int len = end - start;
 
-            while (a < b) {
-                // wraparound
-                if (a == numNodes)
-                    a = 0;
-                if (b == 0)
-                    b = numNodes-1;
+        if (len < 0) // vi har en wraparound
+        {
+            len += numNodes;
+        }
 
-                tour.swap(a, b);
+        len = (len+1)/2; // vi behöver bara swappa "hälften av längden" ggr, eftersom vi tar 2 element per swap (+1 för att inte udda antal element ska lämnas kvar)
 
-                a++;
-                b--;
-            }
+        for (int k = 0; k < len; k++)
+        {
+            tour.swap(start, end);
 
-            dbg(String.format("efter: (%d, %d)\t \n%s", a, b, tour));
+            // wraparound för start & end
+            if (++start == numNodes)
+                start = 0;
+
+            if (--end <= 0)
+                end = numNodes-1;
         }
     }
+
 }
