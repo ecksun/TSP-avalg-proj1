@@ -12,7 +12,7 @@ public class TSP {
 
     public final int DEBUG = 0;
 
-    private int neighborsToCheck = 10;
+    private int neighborsToCheck = 11;
 
     private void dbg(Object o) {
         if (DEBUG > 2) {
@@ -51,7 +51,7 @@ public class TSP {
             time = System.currentTimeMillis();
         }
 
-        // printNeighbors();
+        printNeighbors();
 
         NNPath();
         if (DEBUG > 0) {
@@ -96,34 +96,31 @@ public class TSP {
             neighborsToCheck = numNodes-1;
         neighbors =  new int[numNodes][neighborsToCheck];
 
+        // int tmp, prev = 0;
+
+        double dist;
         for (int i = 0; i < numNodes; i++) {
             // Möjlig optimering, sätt n = i 
             Arrays.fill(neighbors[i], -1);
+innerFor:
             for (int n = 0; n < numNodes; n++) {
                 if (i != n) {
-                    double dist = distance(i, n);
+                    dist = distance(i, n);
 
-                    boolean push = false;
-                    int prev = 0;
-                    int tmp;
                     // Vi kollar om noden är en värdig granne
                     for (int j = 0; j < neighborsToCheck; j++) {
                         // om den är en värdig granne, sätt in den 
 
-                        if (!push) {
-                            if (neighbors[i][j] == -1 || (distance(i, neighbors[i][j]) > dist)) {
-                                push = true;
-                                prev = neighbors[i][j];
-                                neighbors[i][j] = n;
-                                continue;
-                            }
-                        }
+                        if (neighbors[i][j] == -1 || (distance(i, neighbors[i][j]) > dist)) {
 
-                        // och flytta allt annat till höger
-                        if (push) {
-                            tmp = neighbors[i][j];
-                            neighbors[i][j] = prev;
-                            prev = tmp;
+                            int k = neighborsToCheck-1;
+                            while (k > j) {
+                                neighbors[i][k] = neighbors[i][k-1];
+                                k--;
+                            }
+                            neighbors[i][j] = n;
+                            continue innerFor;
+
                         }
                     }
                 }
@@ -147,6 +144,7 @@ public class TSP {
         System.err.println("=== Neighbors ===");
         for (int i = 0; i < numNodes; i++) {
             for (int j = 0; j < neighborsToCheck; j++) {
+                // System.err.printf("%d \t", neighbors[i][j]);
                 System.err.printf("%d (%f)\t", neighbors[i][j], distance(i, neighbors[i][j]));
             }
             System.err.println();
@@ -207,7 +205,7 @@ improve: // restart
                     
                     // printTour();
 
-                    if (distance(c1, c2) < distance(c1, nc1) ||
+                     if (distance(c1, c2) < distance(c1, nc1) ||
                         distance(c1, nc1) < distance(c2, nc2)) {
                         if (distance(c1, nc1) + distance(c2, nc2) >
                             distance(c1, c2) + distance(nc1, nc2)) {
