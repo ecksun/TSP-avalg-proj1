@@ -7,7 +7,7 @@ clear:
 clean:
 
 tsp:
-	javac TSP.java
+	javac *.java
 
 run: clear tsp	
 	java TSP < testfall/example.output

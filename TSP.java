@@ -190,39 +190,34 @@ public class TSP {
         boolean improvement = true;
         while (improvement) {
             improvement = false;
-improve:
+improve: // restart 
             for (int i = 0; i < numNodes; i++) {
                 int c1 = tour.getNode(i); // citi 1
                 int nc1 = tour.getNode(i+1); // the next city after city 1
-
+                
+// TODO: what happens if 'improve:' is placed here?
+                // select next edge from neighbor list
                 for (int n = 0; n < neighborsToCheck; n++) {
-                    // if (c1 == n)
-                        // continue;
                     int c2 = neighbors[c1][n];
                     int nc2 = tour.getNextNode(tour.getPos(c2));
+
+                    if (c1 == c2) // doesn't happen if neighbors[][] isn't borken
+                        continue;
                     
                     // printTour();
 
                     if (distance(c1, nc1) + distance(c2, nc2) >
                             distance(c1, c2) + distance(nc1, nc2)) {
-                        // if (distance(tour.getPos(i), tour.getPos(i)+1) + 
-                        // distance(neighbors[pos[i]][n],pos[neighbors[pos[i]][n]]+1)
-                        // >
-                        // distance(pos[i], neighbors[pos[i]][n]) + 
-                        // distance(pos[i]+1, pos[neighbors[pos[i]][n]]+1))
-                        // {
                         System.err.printf("Working with c1(%d), nc1(%d), c2(%d), nc2(%d)\n", c1, nc1, c2, nc2);
                         System.err.printf("Före (%d, %d): %s\n", nc1, c2, tour.length(this));
                         improvement = true;
 
-                        
                         // Det utkommenderande nedan är hesselbys kod
                         // int ai = tour.getPos(nc1);
                         // int bi = tour.getPos(c2);
                         // int amli = tour.getPos(tour.getPrevNode(nc1));
                         // int bpli = tour.getPos(tour.getNextNode(c2));
-// 
-// 
+                        
                         // if (Math.abs(bi - ai) < Math.abs(bpli - amli)) {
                             // reverse(ai, bi);
                         // }
@@ -246,7 +241,8 @@ improve:
         if (a > b)
             reverse(b, a);
         else {
-        System.err.printf("Före: (%d, %d)\t \n%s", a, b, tour);
+            System.err.printf("Före: (%d, %d)\t \n%s", a, b, tour);
+
             while (a < b) {
                 // wraparound
                 if (a == numNodes)
@@ -254,12 +250,13 @@ improve:
                 if (b == 0)
                     b = numNodes-1;
 
-                tour.swap(a,b);
+                tour.swap(a, b);
 
                 a++;
                 b--;
             }
-        System.err.printf("efter: (%d, %d)\t \n%s", a, b, tour);
+
+            System.err.printf("efter: (%d, %d)\t \n%s", a, b, tour);
         }
     }
     /*
