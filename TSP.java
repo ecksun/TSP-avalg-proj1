@@ -10,7 +10,7 @@ public class TSP {
 
     Tour tour;
 
-    public final int DEBUG = 0;
+    public final int DEBUG = 1;
 
     private int neighborsToCheck = 14;
 
@@ -51,7 +51,7 @@ public class TSP {
             time = System.currentTimeMillis();
         }
 
-        printNeighbors();
+        // printNeighbors();
 
         NNPath();
         if (DEBUG > 0) {
@@ -229,19 +229,6 @@ improve: // restart
                             continue improve;
                         }
                     }
-
-//                    if (distance(c1, nc1) + distance(c2, nc2) >
-//                            distance(c1, c2) + distance(nc1, nc2)) {
-//                        dbg(String.format("Working with c1(%d), nc1(%d), c2(%d), nc2(%d)\n", c1, nc1, c2, nc2));
-//                        dbg(String.format("Före (%d, %d): %s\n", nc1, c2, tour.length(this)));
-//                        improvement = true;
-
-//                        reverse(tour.getPos(nc1), tour.getPos(c2));
-//                        dbg(String.format("efter (%d, %d): %s\n", nc1, c2, tour.length(this)));
-                        
-//                        continue improve;
-//                    }
-
                 }
             }
         }

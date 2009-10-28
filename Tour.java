@@ -50,7 +50,9 @@ class Tour {
      * @return -1 if index out of bounds, otherwise the node index
      */
     int getNode(int posIndex) {
-        return nodes[posIndex%currNumAddedNodes];
+        if (posIndex == currNumAddedNodes)
+            return nodes[0];
+        return nodes[posIndex];
     }
 
     /**
@@ -62,7 +64,9 @@ class Tour {
      * @return the node index if  
      */
     int getNextNode(int posIndex) {
-        return nodes[(posIndex+1)%currNumAddedNodes];
+        if (posIndex+1 == currNumAddedNodes)
+            return nodes[0];
+        return nodes[(posIndex+1)];
     }
 
     int getPrevNode(int posIndex) {
