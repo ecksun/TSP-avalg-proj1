@@ -92,7 +92,7 @@ public class TSP {
      * TODO fungerar den?
      */
     void createNeighbors() {
-        if (neighborsToCheck > numNodes)
+        if (neighborsToCheck >= numNodes)
             neighborsToCheck = numNodes-1;
         neighbors =  new int[numNodes][neighborsToCheck];
 
@@ -197,7 +197,6 @@ improve: // restart
                 int c1 = tour.getNode(i); // citi 1
                 int nc1 = tour.getNode(i+1); // the next city after city 1
                 
-// TODO: what happens if 'improve:' is placed here?
                 // select next edge from neighbor list
                 for (int n = 0; n < neighborsToCheck; n++) {
                     int c2 = neighbors[c1][n];

@@ -16,7 +16,7 @@ test: all
 	./testfall/testAll.sh | awk '{ sum += $$3 } END { print sum }'
 
 profile: all
-	java -javaagent:shiftone-jrat.jar TSP < testfall/100
+	java -javaagent:shiftone-jrat.jar TSP < testfall/250
 
 profiler:
 	java -Xmx256M -jar shiftone-jrat.jar
