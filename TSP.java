@@ -89,7 +89,6 @@ public class TSP {
 
     /**
      * Försöker skapa grannar
-     * TODO fungerar den?
      */
     void createNeighbors() {
         if (neighborsToCheck >= numNodes)
