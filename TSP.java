@@ -207,17 +207,27 @@ improve: // restart
                     
                     // printTour();
 
-                    if (distance(c1, nc1) + distance(c2, nc2) >
+                    if (distance(c1, c2) < distance(c1, nc1) ||
+                        distance(c1, nc1) < distance(c2, nc2)) {
+                        if (distance(c1, nc1) + distance(c2, nc2) >
                             distance(c1, c2) + distance(nc1, nc2)) {
+                            improvement = true;
+                            reverse(tour.getPos(nc1), tour.getPos(c2));
+                            continue improve;
+                        }
+                    }
+
+//                    if (distance(c1, nc1) + distance(c2, nc2) >
+//                            distance(c1, c2) + distance(nc1, nc2)) {
 //                        dbg(String.format("Working with c1(%d), nc1(%d), c2(%d), nc2(%d)\n", c1, nc1, c2, nc2));
 //                        dbg(String.format("Före (%d, %d): %s\n", nc1, c2, tour.length(this)));
-                        improvement = true;
+//                        improvement = true;
 
-                        reverse(tour.getPos(nc1), tour.getPos(c2));
+//                        reverse(tour.getPos(nc1), tour.getPos(c2));
 //                        dbg(String.format("efter (%d, %d): %s\n", nc1, c2, tour.length(this)));
                         
-                        continue improve;
-                    }
+//                        continue improve;
+//                    }
 
                 }
             }
