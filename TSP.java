@@ -53,7 +53,7 @@ public class TSP {
             time = System.currentTimeMillis();
         }
 
-        printNeighbors();
+        // printNeighbors();
 
         NNPath();
         if (DEBUG) {
@@ -147,7 +147,7 @@ public class TSP {
         System.err.println("=== Neighbors ===");
         for (int i = 0; i < numNodes; i++) {
             for (int j = 0; j < neighborsToCheck; j++) {
-                System.err.print(neighbors[i][j] + "\t");
+                System.err.printf("%d (%f)\t", neighbors[i][j], distance(i, neighbors[i][j]));
             }
             System.err.println();
         }
