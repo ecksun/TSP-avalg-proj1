@@ -50,11 +50,7 @@ class Tour {
      * @return -1 if index out of bounds, otherwise the node index
      */
     int getNode(int posIndex) {
-        // try {
-            return nodes[posIndex%currNumAddedNodes];
-        // } catch (ArrayIndexOutOfBoundsException e) {
-            // return -1;
-        // }
+        return nodes[posIndex%currNumAddedNodes];
     }
 
     /**

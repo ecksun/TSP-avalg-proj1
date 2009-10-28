@@ -10,9 +10,15 @@ public class TSP {
 
     Tour tour;
 
-    public final boolean DEBUG = true;
+    public final int DEBUG = 1;
 
-    private int neighborsToCheck = 11;
+    private int neighborsToCheck = 7;
+
+    private void dbg(Object o) {
+        if (DEBUG > 2) {
+            System.err.println(o);
+        }
+    }
 
     public static void main (String[] argv) {
         new TSP();
@@ -23,32 +29,24 @@ public class TSP {
         nodes = new Node[numNodes];
         tour = new Tour(numNodes);
         long time;
-        if (DEBUG)
+        if (DEBUG > 0)
             time = System.currentTimeMillis();
 
         readNodes();
 
-        if (DEBUG) {
+        if (DEBUG > 0) {
             System.err.println("readNodes()         " + (System.currentTimeMillis() - time));	
             time = System.currentTimeMillis();
         }
 
         createDistance();
-        if (DEBUG) {
+        if (DEBUG > 0) {
             System.err.println("createDistance()	" + (System.currentTimeMillis() - time));
             time = System.currentTimeMillis();
         }
 
-        // 
-        // for (int i = 0; i < numNodes; i++) {
-        // for (int j = 0; j < numNodes; j++) {
-        // System.err.print(distance[i][j] + "\t");
-        // }
-        // System.out.println();
-        // }
-
         createNeighbors();  
-        if (DEBUG) {
+        if (DEBUG > 0) {
             System.err.println("createNeighbors()	" + (System.currentTimeMillis() - time));
             time = System.currentTimeMillis();
         }
@@ -56,19 +54,19 @@ public class TSP {
         // printNeighbors();
 
         NNPath();
-        if (DEBUG) {
+        if (DEBUG > 0) {
             System.err.println("NNPath()	        " + (System.currentTimeMillis() - time));
             time = System.currentTimeMillis();
         }
 
         twoOpt();
-        if (DEBUG) {
+        if (DEBUG > 0) {
             System.err.println("twoOpt()	        " + (System.currentTimeMillis() - time));
             time = System.currentTimeMillis();
         }
 
         printTour();
-        if (DEBUG) {
+        if (DEBUG > 0) {
             System.err.println("printTour()	        " + (System.currentTimeMillis() - time));
             System.err.println("tour length:  " + tour.length(this));
         }
@@ -144,6 +142,8 @@ public class TSP {
      * Print all neighbors in a matrix style kinda way
      */
     void printNeighbors() {
+        if (DEBUG <= 0) return;
+
         System.err.println("=== Neighbors ===");
         for (int i = 0; i < numNodes; i++) {
             for (int j = 0; j < neighborsToCheck; j++) {
@@ -162,10 +162,8 @@ public class TSP {
 
     double distance(int a, int b) {
         if (b < a) {
-            // System.err.printf("distance(%d, %d) = %f\n", a, b, distance[b][a]);
             return distance[b][a];
         }
-        // System.err.printf("distance(%d, %d) = %f\n", a, b, distance[a][b]);
         return distance[a][b];
     }
 
@@ -194,49 +192,31 @@ public class TSP {
         boolean improvement = true;
         while (improvement) {
             improvement = false;
-improve:
+improve: // restart 
             for (int i = 0; i < numNodes; i++) {
                 int c1 = tour.getNode(i); // citi 1
                 int nc1 = tour.getNode(i+1); // the next city after city 1
-
+                
+// TODO: what happens if 'improve:' is placed here?
+                // select next edge from neighbor list
                 for (int n = 0; n < neighborsToCheck; n++) {
-                    // if (c1 == n)
-                        // continue;
                     int c2 = neighbors[c1][n];
                     int nc2 = tour.getNextNode(tour.getPos(c2));
+
+                    if (c1 == c2) // doesn't happen if neighbors[][] isn't borken
+                        continue;
                     
                     // printTour();
 
                     if (distance(c1, nc1) + distance(c2, nc2) >
                             distance(c1, c2) + distance(nc1, nc2)) {
-                        // if (distance(tour.getPos(i), tour.getPos(i)+1) + 
-                        // distance(neighbors[pos[i]][n],pos[neighbors[pos[i]][n]]+1)
-                        // >
-                        // distance(pos[i], neighbors[pos[i]][n]) + 
-                        // distance(pos[i]+1, pos[neighbors[pos[i]][n]]+1))
-                        // {
-                        System.err.printf("Working with c1(%d), nc1(%d), c2(%d), nc2(%d)\n", c1, nc1, c2, nc2);
-                        System.err.printf("Före (%d, %d): %s\n", nc1, c2, tour.length(this));
+                        dbg(String.format("Working with c1(%d), nc1(%d), c2(%d), nc2(%d)\n", c1, nc1, c2, nc2));
+                        dbg(String.format("Före (%d, %d): %s\n", nc1, c2, tour.length(this)));
                         improvement = true;
 
+                        reverse(tour.getPos(nc1), tour.getPos(c2));
+                        dbg(String.format("efter (%d, %d): %s\n", nc1, c2, tour.length(this)));
                         
-                        // Det utkommenderande nedan är hesselbys kod
-                        // int ai = tour.getPos(nc1);
-                        // int bi = tour.getPos(c2);
-                        // int amli = tour.getPos(tour.getPrevNode(nc1));
-                        // int bpli = tour.getPos(tour.getNextNode(c2));
-// 
-// 
-                        // if (Math.abs(bi - ai) < Math.abs(bpli - amli)) {
-                            // reverse(ai, bi);
-                        // }
-                        // else {
-                            // reverse(bpli, amli);
-                        // }
-
-                        reverse(nc1, c2);
-                        System.err.printf("efter (%d, %d): %s\n", nc1, c2, tour.length(this));
-                        // reverse(pos[i]+1, neighbors[pos[i]][n]);
                         continue improve;
                     }
 
@@ -250,7 +230,8 @@ improve:
         if (a > b)
             reverse(b, a);
         else {
-        System.err.printf("Före: (%d, %d)\t \n%s", a, b, tour);
+            dbg(String.format("Före: (%d, %d)\t \n%s", a, b, tour));
+
             while (a < b) {
                 // wraparound
                 if (a == numNodes)
@@ -258,40 +239,13 @@ improve:
                 if (b == 0)
                     b = numNodes-1;
 
-                tour.swap(a,b);
+                tour.swap(a, b);
 
                 a++;
                 b--;
             }
-        System.err.printf("efter: (%d, %d)\t \n%s", a, b, tour);
+
+            dbg(String.format("efter: (%d, %d)\t \n%s", a, b, tour));
         }
     }
-    /*
-     * hesselbys kod
-     */
-    // void reverse(int start, int end)
-    // {
-        // //System.err.println("reverse\t"+start+"\t"+end);
-        // int len = end - start;
-// 
-        // if (len < 0) // vi har en wraparound
-        // {
-            // len += numNodes;
-        // }
-// 
-        // len = (len+1)/2; // vi behöver bara swappa "hälften av längden" ggr, eftersom vi tar 2 element per swap (+1 för att inte udda antal element ska lämnas kvar)
-// 
-        // for (int k = 0; k < len; k++)
-        // {
-            // tour.swap(start, end);
-// 
-            // // wraparound för start & end
-            // if (++start == numNodes)
-                // start = 0;
-// 
-            // if (--end <= 0)
-                // end = numNodes-1;
-        // }
-    // }
-
 }
