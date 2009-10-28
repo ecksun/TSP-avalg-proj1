@@ -1,4 +1,5 @@
 import java.lang.Math;
+import java.util.Arrays;
 public class TSP {
     Kattio io;
     int numNodes;
@@ -11,7 +12,7 @@ public class TSP {
 
     public final boolean DEBUG = true;
 
-    private final int neighborsToCheck = 25;
+    private int neighborsToCheck = 11;
 
     public static void main (String[] argv) {
         new TSP();
@@ -52,6 +53,8 @@ public class TSP {
             time = System.currentTimeMillis();
         }
 
+        printNeighbors();
+
         NNPath();
         if (DEBUG) {
             System.err.println("NNPath()	        " + (System.currentTimeMillis() - time));
@@ -91,39 +94,40 @@ public class TSP {
      * TODO fungerar den?
      */
     void createNeighbors() {
+        if (neighborsToCheck > numNodes)
+            neighborsToCheck = numNodes-1;
         neighbors =  new int[numNodes][neighborsToCheck];
 
         for (int i = 0; i < numNodes; i++) {
             // Möjlig optimering, sätt n = i 
+            Arrays.fill(neighbors[i], -1);
             for (int n = 0; n < numNodes; n++) {
-                double dist = distance(i, n);
-
-                // check if we at all want to use this node by comparing it to
-                // the node furthest away from our node
-                if (dist > distance(i, neighbors[i][neighborsToCheck-1])) {
-                    // TODO: dist större än?
+                if (i != n) {
+                    double dist = distance(i, n);
 
                     boolean push = false;
-                    int tmp = 0;
+                    int prev = 0;
+                    int tmp;
                     // Vi kollar om noden är en värdig granne
                     for (int j = 0; j < neighborsToCheck; j++) {
                         // om den är en värdig granne, sätt in den 
-                        if (distance(i, neighbors[i][j]) < dist) {
-                            push = true;
-                            tmp = neighbors[i][j];
-                            neighbors[i][j] = n;
+
+                        if (!push) {
+                            if (neighbors[i][j] == -1 || (distance(i, neighbors[i][j]) > dist)) {
+                                push = true;
+                                prev = neighbors[i][j];
+                                neighbors[i][j] = n;
+                                continue;
+                            }
                         }
+
                         // och flytta allt annat till höger
                         if (push) {
-                            // TODO: borken?
                             tmp = neighbors[i][j];
-                            neighbors[i][j] = tmp;
+                            neighbors[i][j] = prev;
+                            prev = tmp;
                         }
                     }
-
-                }
-                else {
-                    break;
                 }
             }
         }
