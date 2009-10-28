@@ -8,3 +8,5 @@ a.out
 Debug/
 *.class
 .classpath
+jrat*
+shiftone-jrat.jar

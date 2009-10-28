@@ -136,8 +136,7 @@ class Tour {
         StringBuilder sb = new StringBuilder();
 
         for (int node : nodes) {
-            sb.append(node);
-            sb.append(System.getProperty("line.separator"));
+            sb.append(node + "\n");
         }
 
         return sb.toString();
