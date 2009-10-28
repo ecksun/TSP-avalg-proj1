@@ -12,7 +12,7 @@ public class TSP {
 
     public final int DEBUG = 0;
 
-    private int neighborsToCheck = 11;
+    private int neighborsToCheck = 14;
 
     private void dbg(Object o) {
         if (DEBUG > 2) {
@@ -107,10 +107,26 @@ innerFor:
                 if (i != n) {
                     dist = distance(i, n);
 
-                    // Vi kollar om noden är en värdig granne
-                    for (int j = 0; j < neighborsToCheck; j++) {
-                        // om den är en värdig granne, sätt in den 
+                    // om den är en värdig granne, sätt in den 
+                    if (neighbors[i][neighborsToCheck-1] != -1 && dist > distance(i, neighbors[i][neighborsToCheck-1]))
+                        continue;
 
+                    
+                    int min=0, max, mid;
+                    max = neighborsToCheck;
+
+                    while(max-min <= 4) {
+                        mid = (min + max)/2;
+                        if (dist > distance(i, neighbors[i][mid])) 
+                            min = mid +1;
+                        else
+                            max = mid -1;
+                    }
+
+                    // Vi kollar om noden är en värdig granne
+                    for (int j = min; j < max; j++) {
+
+                        // Är detta en bättre granne?
                         if (neighbors[i][j] == -1 || (distance(i, neighbors[i][j]) > dist)) {
 
                             int k = neighborsToCheck-1;

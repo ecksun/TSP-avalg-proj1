@@ -15,6 +15,9 @@ run: clear tsp
 test: all
 	./testfall/testAll.sh | awk '{ sum += $$3 } END { print sum }'
 
+time: all
+	./testfall/timeTest.sh
+
 profile: all
 	java -javaagent:shiftone-jrat.jar TSP < testfall/250
 
