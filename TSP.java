@@ -12,7 +12,7 @@ public class TSP {
 
     public final int DEBUG = 0;
 
-    private int neighborsToCheck = 5;
+    private int neighborsToCheck = 11;
 
     public static void main (String[] argv) {
         new TSP();
