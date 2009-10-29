@@ -12,7 +12,7 @@ public class TSP {
 
     public final int DEBUG = 0;
 
-    private int neighborsToCheck = 11;
+    private int neighborsToCheck = 12;
 
     public static void main (String[] argv) {
         new TSP();
@@ -151,7 +151,7 @@ innerFor:
      * Såhär?
      */
     void printTour() {
-        io.println(tour);
+        tour.print(io);
         return;
     }
 
