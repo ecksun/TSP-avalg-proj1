@@ -12,10 +12,10 @@ public class TSP {
 
     public final int DEBUG = 1;
 
-    private int neighborsToCheck = 11;
+    private int neighborsToCheck = 5;
 
     private void dbg(Object o) {
-        if (DEBUG > 2) {
+        if (DEBUG > 1) {
             System.err.println(o);
         }
     }
@@ -223,14 +223,17 @@ improve: // restart
                     if (t2 == t3) continue; 
 
                     int t4 = tour.getNodeAfter(t3);
-                    int t5 = tour.getNodeAfter(t4);
+                    int t5 = tour.getNodeAfter(t2); // rätt tänkt?
+
+                    if (t1 == t4) continue;
+                    if (t2 == t4) continue;
+                    if (t3 == t5) continue;
                     
                     // 2.5-opt
-                    double curr = distance(t1,t2) + distance(t3,t4) + distance(t4,t5);
-                    double opt25 = distance(t1,t4) + distance(t4,t2) + distance(t3,t5);
+                    double curr = distance(t1,t2) + distance(t3,t4) + distance(t2,t5);
+                    double opt25 = distance(t4,t2) + distance(t3,t2) + distance(t1,t5);
 
                     if (opt25 < curr) {
-                        if (DEBUG > 1) System.err.println("opt25 > curr");
                         tour.moveBetween(t2, t3, t4);
                         improvement = true;
                         continue improve;
