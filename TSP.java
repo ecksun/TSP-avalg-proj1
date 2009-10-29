@@ -12,10 +12,10 @@ public class TSP {
 
     public final int DEBUG = 0;
 
-    private int neighborsToCheck = 14;
+    private int neighborsToCheck = 10;
 
     private void dbg(Object o) {
-        if (DEBUG > 2) {
+        if (DEBUG > 1) {
             System.err.println(o);
         }
     }
@@ -65,11 +65,19 @@ public class TSP {
             time = System.currentTimeMillis();
         }
 
+        twoDotFiveOpt();
+        if (DEBUG > 0) {
+            System.err.println("twoDotFiveOpt()	        " + (System.currentTimeMillis() - time));
+            time = System.currentTimeMillis();
+        }
+
         printTour();
         if (DEBUG > 0) {
             System.err.println("printTour()	        " + (System.currentTimeMillis() - time));
             System.err.println("tour length:  " + tour.length(this));
         }
+
+        io.close();
     }
 
     void readNodes() {
@@ -146,9 +154,11 @@ innerFor:
 
     /**
      * Vi kanske kan tjäna lite hastighet här genom att buffra outputen
+     * Såhär?
      */
     void printTour() {
-        System.out.println(tour);
+        io.println(tour);
+        return;
     }
 
     /**
@@ -198,7 +208,6 @@ innerFor:
         }
     }
 
-
     void twoOpt() {
         boolean improvement = true;
         while (improvement) {
@@ -218,6 +227,7 @@ improve: // restart
                     
                     // printTour();
 
+                    // TODO: bra?
                      if (distance(c1, c2) < distance(c1, nc1) ||
                         distance(c1, nc1) < distance(c2, nc2)) {
                         if (distance(c1, nc1) + distance(c2, nc2) >
@@ -226,6 +236,50 @@ improve: // restart
                             reverse(tour.getPos(nc1), tour.getPos(c2));
                             continue improve;
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    void twoDotFiveOpt() {
+        boolean improvement = true;
+        while (improvement) {
+            improvement = false;
+improve: // restart 
+            for (int i = 0; i < numNodes; i++) {
+                int t1 = tour.getNode(i); // city 1
+                int t2 = tour.getNextNode(i); // follows city 1 immediately 
+                
+                // find next city (t3) from neighbor list (and thereby t4)
+                for (int n = 0; n < neighborsToCheck; n++) {
+                    int t3 = neighbors[t1][n];
+                    
+                    // throw away seemingly useless moves
+                    if (t1 == t3) continue;
+                    if (t2 == t3) continue; 
+
+                    int t4 = tour.getNodeAfter(t3);
+                    int t5 = tour.getNodeAfter(t2); // rätt tänkt?
+
+                    if (t1 == t4) continue;
+                    if (t2 == t4) continue;
+                    if (t3 == t5) continue;
+                    
+                    // 2.5-opt
+                    double curr = distance(t1,t2) + distance(t3,t4) + distance(t2,t5);
+                    double opt25 = distance(t4,t2) + distance(t3,t2) + distance(t1,t5);
+
+                    if (opt25 < curr) {
+                        tour.moveBetween(t2, t3, t4);
+                        improvement = true;
+                        continue improve;
+                    } else if ( distance(t1, t2) + distance(t3, t4) >
+                                distance(t1, t3) + distance(t2, t4) )
+                    {
+                        reverse(tour.getPos(t2), tour.getPos(t3));
+                        improvement = true;
+                        continue improve;
                     }
                 }
             }
