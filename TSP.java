@@ -12,13 +12,7 @@ public class TSP {
 
     public final int DEBUG = 0;
 
-    private int neighborsToCheck = 10;
-
-    private void dbg(Object o) {
-        if (DEBUG > 1) {
-            System.err.println(o);
-        }
-    }
+    private int neighborsToCheck = 5;
 
     public static void main (String[] argv) {
         new TSP();
@@ -274,13 +268,26 @@ improve: // restart
                         tour.moveBetween(t2, t3, t4);
                         improvement = true;
                         continue improve;
-                    } else if ( distance(t1, t2) + distance(t3, t4) >
+                    } /*else if (distance(t1, t3) < distance(t1, t2) ||
+                        distance(t1, t2) < distance(t3, t4)) {
+                        if (distance(t1, t2) + distance(t3, t4) >
+                            distance(t1, t3) + distance(t2, t4)) {
+                            improvement = true;
+                            reverse(tour.getPos(t2), tour.getPos(t3));
+                            continue improve;
+                        }
+                    }
+                    */
+                    
+                    /*else if ( distance(t1, t2) + distance(t3, t4) >
                                 distance(t1, t3) + distance(t2, t4) )
                     {
                         reverse(tour.getPos(t2), tour.getPos(t3));
                         improvement = true;
                         continue improve;
                     }
+                    blir sämre utan
+                    */
                 }
             }
         }
