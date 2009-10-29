@@ -229,7 +229,7 @@ improve: // restart
                     {
                         // tänkt att bara testa funktionaliteten hos moveBetween
                         // tycks dock bajsa
-//                        tour.moveBetween(t2, t3, t4);
+                        tour.moveBetween(t2, t3, t4);
 //                        tour.moveBetween(t3, t1, t2);
                         
                         improvement = true;
