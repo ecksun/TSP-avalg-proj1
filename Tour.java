@@ -2,6 +2,8 @@ import java.lang.StringBuilder;
 
 class Tour {
 
+    public static final boolean DEBUG = true;
+    
     /**
      * A vector holding node indices.
      */
@@ -41,6 +43,65 @@ class Tour {
         currNumAddedNodes++;
         return;
     }
+
+    /**
+     * Sets the node index at the specified position index to the
+     * given node index. Does not care about nodes disappearing.
+     *
+     * @param posIndex position index
+     * @param nodeIndex node index
+     */
+    private void setNode(int posIndex, int nodeIndex) {
+        nodes[posIndex] = nodeIndex;
+        positions[nodeIndex] = posIndex;
+
+        if (DEBUG) nodesPosInvariant();
+    }
+
+    /**
+     * Moves the given node index in this tour to the specified
+     * position.
+     *
+     * @param x The node index to insert
+     * @param a The node index after which x should be placed
+     * @param a The node index before which x should be placed
+     */
+    boolean moveBetween(int x, int a, int b) {
+        if (x == a || x == b || a == b) {
+            return false;
+        }
+
+        int posX = getPos(x);
+        int posA = getPos(a);
+        int posB = getPos(b);
+
+        if (DEBUG) {
+            System.err.print(String.format("moveBetween(x=%d, a=%d, b=%d)", x, a, b));
+            System.err.println(String.format(" = moveBetween(posX=%d, posA=%d, posB=%d)", posX, posA, posB));
+        }
+
+        if (posX < posA) {
+            for (int i = posX; i < posA; i++) {
+                setNode(i, getNode(i+1));
+            }
+            if (DEBUG) nodesPosInvariant();
+
+            setNode(posA, x);
+            nodesPosInvariant();
+        } else { // posX > posA
+            for (int i = posX; i > posB; i--) {
+                setNode(i, getNode(i-1));
+            }
+            if (DEBUG) nodesPosInvariant();
+
+            setNode(posB, x);
+            if (DEBUG) nodesPosInvariant();
+        }
+
+        return true;
+    }
+
+    // TODO implement tryMoveAfter which returns the new length
 
     /**
      * Returns the node index at the specified position index of the
@@ -146,5 +207,15 @@ class Tour {
         return sb.toString();
     }
 
+    /**
+     * Tests the invariant that nodes vector and positions vector
+     * should always be in sync.
+     */
+    private void nodesPosInvariant() {
+        for (int node = 0; node < positions.length; node++) {
+            String fail = String.format("node=%d == nodes[positions[node=%d]=%d]=%d", node, node, positions[node], nodes[positions[node]]);
+            assert node == nodes[positions[node]] : fail;
+        }
+    }
 
 }

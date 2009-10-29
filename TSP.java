@@ -12,7 +12,7 @@ public class TSP {
 
     public final int DEBUG = 1;
 
-    private int neighborsToCheck = 14;
+    private int neighborsToCheck = 11;
 
     private void dbg(Object o) {
         if (DEBUG > 2) {
@@ -70,6 +70,8 @@ public class TSP {
             System.err.println("printTour()	        " + (System.currentTimeMillis() - time));
             System.err.println("tour length:  " + tour.length(this));
         }
+
+        io.close();
     }
 
     void readNodes() {
@@ -145,9 +147,11 @@ innerFor:
 
     /**
      * Vi kanske kan tjäna lite hastighet här genom att buffra outputen
+     * Såhär?
      */
     void printTour() {
-        System.out.println(tour);
+        io.println(tour);
+        return;
     }
 
     /**
@@ -207,27 +211,31 @@ innerFor:
             improvement = false;
 improve: // restart 
             for (int i = 0; i < numNodes; i++) {
-                int c1 = tour.getNode(i); // citi 1
-                int nc1 = tour.getNode(i+1); // the next city after city 1
+                int t1 = tour.getNode(i); // city 1
+                int t2 = tour.getNode(i+1); // follows city 1 immediately 
                 
-                // select next edge from neighbor list
+                // select next city (t3) from neighbor list (and thereby t4)
                 for (int n = 0; n < neighborsToCheck; n++) {
-                    int c2 = neighbors[c1][n];
-                    int nc2 = tour.getNextNode(tour.getPos(c2));
-
-                    if (c1 == c2) // doesn't happen if neighbors[][] isn't borken
-                        continue;
+                    int t3 = neighbors[t1][n];
                     
-                    // printTour();
+                    // throw away seemingly useless moves
+                    if (t1 == t3) continue;
+                    if (t2 == t3) continue; 
 
-                     if (distance(c1, c2) < distance(c1, nc1) ||
-                        distance(c1, nc1) < distance(c2, nc2)) {
-                        if (distance(c1, nc1) + distance(c2, nc2) >
-                            distance(c1, c2) + distance(nc1, nc2)) {
-                            improvement = true;
-                            reverse(tour.getPos(nc1), tour.getPos(c2));
-                            continue improve;
-                        }
+                    int t4 = tour.getNextNode(tour.getPos(t3));
+                    
+                    if ( distance(t1, t2) + distance(t3, t4) >
+                            distance(t1, t3) + distance(t2, t4) )
+                    {
+                        // tänkt att bara testa funktionaliteten hos moveBetween
+                        // tycks dock bajsa
+//                        tour.moveBetween(t2, t3, t4);
+//                        tour.moveBetween(t3, t1, t2);
+                        
+                        improvement = true;
+                        reverse(tour.getPos(t2), tour.getPos(t3));
+
+                        continue improve;
                     }
                 }
             }
