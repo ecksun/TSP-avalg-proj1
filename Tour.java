@@ -2,7 +2,7 @@ import java.lang.StringBuilder;
 
 class Tour {
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     
     /**
      * A vector holding node indices.
@@ -54,8 +54,6 @@ class Tour {
     private void setNode(int posIndex, int nodeIndex) {
         nodes[posIndex] = nodeIndex;
         positions[nodeIndex] = posIndex;
-
-        if (DEBUG) nodesPosInvariant();
     }
 
     /**
@@ -84,15 +82,14 @@ class Tour {
             for (int i = posX; i < posA; i++) {
                 setNode(i, getNode(i+1));
             }
-            if (DEBUG) nodesPosInvariant();
 
             setNode(posA, x);
-            nodesPosInvariant();
+
+            if (DEBUG) nodesPosInvariant();
         } else { // posX > posA
             for (int i = posX; i > posB; i--) {
                 setNode(i, getNode(i-1));
             }
-            if (DEBUG) nodesPosInvariant();
 
             setNode(posB, x);
             if (DEBUG) nodesPosInvariant();
@@ -135,6 +132,19 @@ class Tour {
             return nodes[currNumAddedNodes-1];
         else
             return nodes[posIndex];
+    }
+
+    /**
+     * Returns the node (index) that immediately follows the specified
+     * node (index) in this tour.
+     *
+     * @param node the node (index) before the wanted node index
+     * @return the node (index) following the specified node (index)
+     */
+    int getNodeAfter(int node) {
+        int nodePos = getPos(node);
+
+        return getNextNode(nodePos);
     }
 
     /**
@@ -212,9 +222,18 @@ class Tour {
      * should always be in sync.
      */
     private void nodesPosInvariant() {
-        for (int node = 0; node < positions.length; node++) {
+        for (int node = 0; node < currNumAddedNodes; node++) {
             String fail = String.format("node=%d == nodes[positions[node=%d]=%d]=%d", node, node, positions[node], nodes[positions[node]]);
             assert node == nodes[positions[node]] : fail;
+        }
+    }
+
+    private void allNodesPresent() {
+        for (int node = 0; node < currNumAddedNodes; node++) {
+            boolean found = false;
+            for (int presentNode : nodes) {
+                if (presentNode == node) found = true;
+            }
         }
     }
 

@@ -212,9 +212,9 @@ innerFor:
 improve: // restart 
             for (int i = 0; i < numNodes; i++) {
                 int t1 = tour.getNode(i); // city 1
-                int t2 = tour.getNode(i+1); // follows city 1 immediately 
+                int t2 = tour.getNextNode(i); // follows city 1 immediately 
                 
-                // select next city (t3) from neighbor list (and thereby t4)
+                // find next city (t3) from neighbor list (and thereby t4)
                 for (int n = 0; n < neighborsToCheck; n++) {
                     int t3 = neighbors[t1][n];
                     
@@ -222,19 +222,23 @@ improve: // restart
                     if (t1 == t3) continue;
                     if (t2 == t3) continue; 
 
-                    int t4 = tour.getNextNode(tour.getPos(t3));
+                    int t4 = tour.getNodeAfter(t3);
+                    int t5 = tour.getNodeAfter(t4);
                     
-                    if ( distance(t1, t2) + distance(t3, t4) >
-                            distance(t1, t3) + distance(t2, t4) )
-                    {
-                        // tänkt att bara testa funktionaliteten hos moveBetween
-                        // tycks dock bajsa
-                        tour.moveBetween(t2, t3, t4);
-//                        tour.moveBetween(t3, t1, t2);
-                        
-                        improvement = true;
-                        reverse(tour.getPos(t2), tour.getPos(t3));
+                    // 2.5-opt
+                    double curr = distance(t1,t2) + distance(t3,t4) + distance(t4,t5);
+                    double opt25 = distance(t1,t4) + distance(t4,t2) + distance(t3,t5);
 
+                    if (opt25 < curr) {
+                        if (DEBUG > 1) System.err.println("opt25 > curr");
+                        tour.moveBetween(t2, t3, t4);
+                        improvement = true;
+                        continue improve;
+                    } else if ( distance(t1, t2) + distance(t3, t4) >
+                                distance(t1, t3) + distance(t2, t4) )
+                    {
+                        reverse(tour.getPos(t2), tour.getPos(t3));
+                        improvement = true;
                         continue improve;
                     }
                 }
