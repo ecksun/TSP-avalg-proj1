@@ -98,9 +98,9 @@ class Tour {
     void swap (int a, int b) {
         if (a == b) 
             return;
-        int tmp1 = nodes[a];
+        int tmpNode = nodes[a];
         nodes[a] = nodes[b];
-        nodes[b] = tmp1;
+        nodes[b] = tmpNode;
         positions[nodes[a]] = a;
         positions[nodes[b]] = b;
 

@@ -10,9 +10,9 @@ public class TSP {
 
     Tour tour;
 
-    public final int DEBUG = 1;
+    public final int DEBUG = 0;
 
-    private int neighborsToCheck = 14;
+    private int neighborsToCheck = 11;
 
     private void dbg(Object o) {
         if (DEBUG > 2) {
@@ -208,7 +208,7 @@ innerFor:
 improve: // restart 
             for (int i = 0; i < numNodes; i++) {
                 int c1 = tour.getNode(i); // citi 1
-                int nc1 = tour.getNode(i+1); // the next city after city 1
+                int nc1 = tour.getNextNode(i); // the next city after city 1
                 
                 // select next edge from neighbor list
                 for (int n = 0; n < neighborsToCheck; n++) {
