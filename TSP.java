@@ -12,7 +12,7 @@ public class TSP {
 
     public final int DEBUG = 0;
 
-    private int neighborsToCheck = 11;
+    private int neighborsToCheck = 14;
 
     private void dbg(Object o) {
         if (DEBUG > 2) {
@@ -83,6 +83,7 @@ public class TSP {
         for (int i = 0; i < numNodes; i++) {
             for (int j = i; j < numNodes; j++) {
                 distance[i][j] = calcDistance(i,j);
+                distance[j][i] = distance[i][j];
             }
         }
     }
@@ -174,9 +175,6 @@ innerFor:
     }
 
     double distance(int a, int b) {
-        if (b < a) {
-            return distance[b][a];
-        }
         return distance[a][b];
     }
 
