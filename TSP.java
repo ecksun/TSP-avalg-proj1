@@ -12,7 +12,7 @@ public class TSP {
 
     public final int DEBUG = 1;
 
-    private int neighborsToCheck = 5;
+    private int neighborsToCheck = 10;
 
     private void dbg(Object o) {
         if (DEBUG > 1) {
@@ -62,6 +62,12 @@ public class TSP {
         twoOpt();
         if (DEBUG > 0) {
             System.err.println("twoOpt()	        " + (System.currentTimeMillis() - time));
+            time = System.currentTimeMillis();
+        }
+
+        twoDotFiveOpt();
+        if (DEBUG > 0) {
+            System.err.println("twoDotFiveOpt()	        " + (System.currentTimeMillis() - time));
             time = System.currentTimeMillis();
         }
 
@@ -204,8 +210,41 @@ innerFor:
         }
     }
 
-
     void twoOpt() {
+        boolean improvement = true;
+        while (improvement) {
+            improvement = false;
+improve: // restart 
+            for (int i = 0; i < numNodes; i++) {
+                int c1 = tour.getNode(i); // citi 1
+                int nc1 = tour.getNextNode(i); // the next city after city 1
+                
+                // select next edge from neighbor list
+                for (int n = 0; n < neighborsToCheck; n++) {
+                    int c2 = neighbors[c1][n];
+                    int nc2 = tour.getNextNode(tour.getPos(c2));
+
+                    if (c1 == c2) // doesn't happen if neighbors[][] isn't borken
+                        continue;
+                    
+                    // printTour();
+
+                    // TODO: bra?
+                     if (distance(c1, c2) < distance(c1, nc1) ||
+                        distance(c1, nc1) < distance(c2, nc2)) {
+                        if (distance(c1, nc1) + distance(c2, nc2) >
+                            distance(c1, c2) + distance(nc1, nc2)) {
+                            improvement = true;
+                            reverse(tour.getPos(nc1), tour.getPos(c2));
+                            continue improve;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void twoDotFiveOpt() {
         boolean improvement = true;
         while (improvement) {
             improvement = false;
