@@ -10,3 +10,7 @@ Debug/
 .classpath
 jrat*
 shiftone-jrat.jar
+*.aux
+*.dvi
+*.log
+*.swo
