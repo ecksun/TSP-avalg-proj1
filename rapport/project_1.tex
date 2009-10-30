@@ -1,0 +1,256 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{srcltx}
+\usepackage[english,swedish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{parskip}
+\usepackage{amsmath}
+\usepackage{algorithmic}
+
+
+\renewcommand{\O}{\ensuremath{\mathcal{O}}}
+\renewcommand{\*}{\ensuremath{\cdot}}
+
+\begin{document}
+
+\selectlanguage{english}
+\title{DD2440 Advanced Algorithms (fall 2009) \\ Project 1 -- Euclidian TSP}
+\author{Joel Pettersson (joelpet@kth.se) \and Linus Wallgren (linuswa@kth.se)}
+\date{\today}
+\maketitle
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+
+\selectlanguage{swedish}
+
+\section{Inledning}
+
+% TODO TSP har massa tillämpningar och är därför intressant
+
+\subsection{Problembeskrivning} 
+%Beskriv TSP, gärna lite snyggt formellt med fina matematiska notationer. :)
+
+Travelling Salesman Problem (TSP), också kallat handelsresandeproblemet, går ut
+på att hitta den kortaste hamiltoncykeln\footnote{En hamiltoncykel är en stig i
+en graf som passerar samtliga noder precis en gång, med undantag för noden där
+stigen startar och slutar.} i en komplett graf. Det är väl känt att TSP tillhör
+de NP-fullständiga problemen, och därmed ej kan förväntas lösas i polynomisk
+tid. Av den anledningen kommer denna rapport fokusera på olika sätt att ta fram
+approximativa lösningar.
+
+Problemet framträder i en rad olika skepnader, där var och en innehåller
+skiftande restriktioner. Den variant av TSP som här behandlas beskrivs genom
+punkter i planet med euklidiska avstånd och därigenom även triangelolikheten
+uppfylld.
+
+Låt $d_{ij}$ beteckna avståndet mellan städerna $t_i$ och $t_j$. Då innebär
+triangelolikheten att $d_{ik} \leq d_{ij} + d_{jk}$ gäller. Det kan uttryckas
+som att sträckan mellan två städer $t_i$ och $t_k$ aldrig kan bli kortare genom
+att passera en annan stad $t_j$ på vägen. I specialfallet då sträckan blir lika
+lång ligger städerna på en rät linje i planet. Målet är alltså att utifrån dessa
+förutsättningar minimera utrycket i (\ref{eq:tourSum}), där $n$ är det totala
+antalet noder i grafen.
+
+\begin{align}
+    \sum_{i=0}^{n}{\sum_{j=0}^{n}{x_{ij} \cdot d_{ij}}},  & \\
+    & x_{ij} =
+    \begin{cases}
+        1 & (i,j) \textrm{ tillhör turen} \\
+        0 & \textrm{annars}
+    \end{cases}
+    \label{eq:tourSum}
+\end{align}
+
+%TODO lägg till beskrivning av x_i,j  med case
+%där 
+%d_{i,j} är avståndet mellan nod i och nod j.
+%x_{i,j} är 1 om kanten (i,j) är del av turen och 0 annars.
+
+Slutligen måste turen beskriven av $x_{ij}$ bilda en hamiltoncykel.
+
+\subsection{Metod}
+
+Här ges en kort sammanfattning av vilka metoder vi har valt att använda.
+Algoritmerna som nämns i följande stycke kommer att presenteras mer detaljerat
+senare i rapporten.
+
+Inledningsvis implementerade vi den naiva startheuristiken som låter noderna
+vara sorterade från $1$ till $n$. På den turen applicerade vi i nästa steg en
+lokal sökning, närmare bestämt 2-opt. När den lokala sökningen hade konstaterats
+fungera korrekt ersatte vi startheuristiken med en Nearest
+neighbor-konstruktion. Slutligen fick 2-opt kompletteras med 2.5-opt. Från
+början var det dessutom tänkt att vi skulle hinna implementera 3-opt, vilket
+dock ej blev fallet.
+
+Ovanstående val av tillvägagångssätt och algoritmer baserades på de empiriska
+resultat som presenteras i \textit{Notes for the course advanced algorithms}
+\footnote{http://www.csc.kth.se/utbildning/kth/kurser/DD2440/avalg07/algnotes.pdf}
+på sidorna 133 och 135. Dessa tydde förvisso på ett övertag för 3-opt och
+framför allt för Lin-Kernighan med avseende på turernas kvalitet, men krävde i
+gengäld längre körningstid. Vidare bedömde vi Lin-Kernighan som jämförelsevis
+intrikat att implementera korrekt.
+
+\section{Konstruktionsheuristiker}
+
+\subsection{Nearest neighbor}
+
+Nearest Neighbor fungerar precis som namnet antyder; från en slumpmässig
+startnod läggs hela tiden den närmsta noden till.
+
+\begin{algorithmic}
+    \STATE $N$ := Nodes()
+    \STATE $T$ := Tour()
+    \FORALL {nodes $t_i \in N$}
+        \STATE best := $\infty$
+        \FORALL {nodes $t_j \in N$}
+            \IF {$t_j$ not used \textbf{and} $d_{ij} <$ best}
+                \STATE best := $t_j$
+                \STATE add(T, best)
+            \ENDIF
+        \ENDFOR
+    \ENDFOR
+\end{algorithmic}
+
+
+\section{Lokal sökning (optimering)} 
+
+En lokal optimering tar, i fallet med TSP, en redan existerande tur och gör
+ändringar i begränsade delar av den för att på så sätt förbättra turens
+kvalitet, det vill säga minska dess totala längd.
+
+\subsection{2-opt} 
+
+Om vi tar bort två kanter från en redan existerad tur finns det endast två sätt
+att sätta tillbaka dem på. Det ena är samma som tidigare, medan det andra är en
+eventuell optimering. Genom att titta på turens längd både innan och efter att
+vi flyttade de två kanterna kan vi få reda på om det faktiskt är en optimering
+eller ej.
+ 
+\subsubsection{Programbeskrivning}
+
+\begin{algorithmic}
+    \STATE $N$ := Nodes()
+    \WHILE {moreImprovements}
+        \STATE moreImprovements := false
+        \FORALL {nodes $t_i \in N$}
+            \STATE $t_j$ := next($t_1$)
+            \FORALL {nodes $t_k \in N$}
+                \STATE $t_l$ := next($t_k$)
+                \IF {$d_{ij} + d_{jk} > d_{ij} + d_{jk}$}
+                    \STATE reverseBetween(j, k)
+                    \STATE moreImprovements := true
+                \ENDIF
+            \ENDFOR
+        \ENDFOR
+    \ENDWHILE   
+\end{algorithmic}
+           
+
+\subsection{2.5-opt} 
+
+%http://www.research.att.com/~dsj/papers/TSPchapter.pdf sida 32källa nummer 21.
+%Kanske kan hitta reda på det faktiska pappret på typ lib.kth.se (jag har inget medlemsskap)  
+
+Tekniken som beskrevs i föregående avsnitt kan generaliseras till $k$-opt för
+ett fixt tal $k$. Speciellt kan 2-opt göras om till 3-opt där först (inte helt
+oväntat) tre kanter i turen tas bort. Detta resulterar i tre isolerade segment,
+av vilka alla tillåtna kombinationer evalueras. Den ihopsättning som ger kortast
+total längd väljs, innan proceduren upprepas.
+
+Anledningen till att ovanstående tas upp i detta avsnitt är att i 2.5-opt
+betraktas de fall av splittringar i 3-opt där ett av de tre segmenten endast
+består av en enda nod. Då finns nämligen endast en tillåten kombination utöver
+den ursprungliga, vilket erbjuder en billig kontroll av möjligheten till
+optimering. Kontrollen går ut på att jämföra längderna av de kanter som tas bort
+kontra de kanter som läggs till. Hur detta går till visas utförligare i
+programbeskrivningen nedan.
+
+2.5-opt kan kombineras med 2-opt på några olika sätt. Ett sätt är att kombinera
+ihop sökningarna så att man för varje kandidat till stad $t_j$ i pseudo-koden
+för 2-opt evaluerar motsvarande 2-opt samt även 2.5-opt:en som placerar den
+ensamma noden i turen mellan de två varandra intilliggande noderna.
+
+Alternativt kan man låta 2-opt köra tills en lokalt optimal tur har skapats och
+först därefter applicera 2.5-opt. Detta visade sig i vårt fall gå snabbare, men
+innebar också en smärre försämring av turernas kvalitéer. Eftersom tiden hos
+KATTIS är begränsad, valde vi att gå på denna snabbare linje.
+
+
+%%%%%%%%% TODO Börja här, Joel! %%%%%%%%%%%%%%%%
+
+\subsubsection{Programbeskrivning}
+
+\begin{algorithmic}
+    \STATE $N$ := Nodes()
+    \WHILE {improvement}
+        \STATE improvment := false
+        \FORALL {nodes $t_i \in N$}
+            \STATE $t_j$ = next($t_1$)
+            \FORALL {nodes $t_k \in N$}
+                \STATE $t_l$ = next($t_k$)
+                \STATE $t_m$ = next($t_l$)
+                \IF {$d(t_i, t_j) + d(t_k, t_l) + d(t_2, t_m) > d(t_4, t_2) + d(t_3, t_2) + d(t_1, t_5)$}
+                    \STATE place $t_j$ after $t_k$
+                    \STATE improvement := true
+                    \STATE restart $t_i$ loop
+                \ENDIF
+            \ENDFOR
+        \ENDFOR
+    \ENDWHILE
+\end{algorithmic}
+
+\subsection{Optimeringar}
+
+För att snabba upp våra lokalsökningar implementerade vi grannlistor som höll
+koll på de närmaste grannarna till varje nod. Det är större sannolikhet att en
+granne till en nod kan ge en förbättring i turen än en nod som ligger långt
+borta. Vi låter alltså bli att titta på de noder som ligger en bit ifrån den
+kant vi håller på att optimera med vår lokala sökning, vilket snabbar upp
+körtiden men samtidigt minskar kvaliteten på approximationen något.
+
+När vi gör våra lokala optimeringar beräknar vi inte hela turens längd för att
+se om vi har en förbättring eller ej, vi beräknar endast vikterna på de kanter
+som flyttas.
+
+Det visade sig vara ganska vanligt att vi vill få reda på vart i turen en viss
+nod är, därför implementerade vi en lista som innehåller nodernas position i
+listan med noder. Därmed slipper vi linjärsöka igenom hela varje gång vi vill ha
+reda på var en nod befinner sig. Kostnaden för att hålla denna lista uppdaterad
+betraktade vi som liten i sammanhanget.
+
+Vi valde även att förberäkna alla avstånd och lagra dem i en matris. Vi beräknar
+avståndet mellan noder såpass ofta att det visade sig löna sig att strunta i
+symetrin hos avstånden, då kollen som behövde ske i distance metoden (en
+if-sats) visade sig vara betydligt mycket långsammare än att sätta ytterligare
+$n^2/2$ värden i matrisen.
+
+
+
+\section{Christofides algoritm} 
+%behöver kanske källor till detta? visserligen fick jag
+%allt utom tidskomplexiteten från föreläsningen -Linus Wallgren 2009-10-30 00.18
+
+Christofides algoritm har en körtid på $\O(n^3)$ och fungerar på följande vis.
+
+Vi börjar med att skapa ett minimalt spännande träd\footnote{Ett spännande träd
+är ett träd som spänner upp alla noder i grafen, medan ett minimalt spännande
+träd är det spännande träd som har den minsta totala kantsumman.} i grafen.
+Därefter görs en matchning mellan alla noder av udda grad med minimal total
+vikt.  
+
+Sedan kombineras den minimala matchningen med det minimala trädet, vars resultat
+gås igenom ända tills en Euler-cykel funnits. För att få en Euler-cykel måste vi
+hoppa över alla noder som vi redan varit i. När vi sedan har kommit tillbaka
+till noden vi startade i har vi fått en hamiltonkrets, d.v.s. en uppskattning på
+TSP.  När vi går igenom strukturen kan vi till exempel alltid gå till den
+``högraste'' noden, och ifall vi redan har besökt den så lägger vi inte in den i
+vår tur igen.
+
+Det är det andra steget i algoritmen, att skapa den minimala matchningen, som
+kräver längst tid -- nämligen $\O(n^3)$, vilket dominerar algoritmen i övrigt och
+gör den ``långsam''.
+
+
+
+\end{document}

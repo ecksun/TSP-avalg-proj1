@@ -98,8 +98,6 @@ class Tour {
         return true;
     }
 
-    // TODO implement tryMoveAfter which returns the new length
-
     /**
      * Returns the node index at the specified position index of the
      * tour, both starting with zero.
@@ -218,6 +216,18 @@ class Tour {
     }
 
     /**
+     * Print this tour to the specified stream.
+     *
+     * @param out The output stream
+     */
+    void print(Kattio out) {
+        for (int i = 0; i < currNumAddedNodes; i++) {
+            out.println(nodes[i]);
+        }
+        return;
+    }
+
+    /**
      * Tests the invariant that nodes vector and positions vector
      * should always be in sync.
      */
@@ -227,14 +237,4 @@ class Tour {
             assert node == nodes[positions[node]] : fail;
         }
     }
-
-    private void allNodesPresent() {
-        for (int node = 0; node < currNumAddedNodes; node++) {
-            boolean found = false;
-            for (int presentNode : nodes) {
-                if (presentNode == node) found = true;
-            }
-        }
-    }
-
 }

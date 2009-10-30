@@ -151,7 +151,7 @@ innerFor:
      * Såhär?
      */
     void printTour() {
-        io.println(tour);
+        tour.print(io);
         return;
     }
 
