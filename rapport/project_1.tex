@@ -236,8 +236,8 @@ Christofides algoritm har en körtid på $\O(n^3)$ och fungerar på följande vi
 Vi börjar med att skapa ett minimalt spännande träd\footnote{Ett spännande träd
 är ett träd som spänner upp alla noder i grafen, medan ett minimalt spännande
 träd är det spännande träd som har den minsta totala kantsumman.} i grafen.
-Därefter görs en matchning mellan alla noder av udda grad med minimal total
-vikt.  
+Därefter finnes den matchning mellan alla noder av udda grad som har minimal 
+total vikt.  
 
 Sedan kombineras den minimala matchningen med det minimala trädet, vars resultat
 gås igenom ända tills en Euler-cykel funnits. För att få en Euler-cykel måste vi
