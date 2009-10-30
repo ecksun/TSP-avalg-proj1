@@ -12,7 +12,7 @@ public class TSP {
 
     public final int DEBUG = 0;
 
-    private int neighborsToCheck = 11;
+    private int neighborsToCheck = 14;
 
     public static void main (String[] argv) {
         new TSP();
@@ -182,6 +182,10 @@ innerFor:
         return distance[a][b];
     }
 
+    /*
+     * Optimering: kör denna efter createNeighbors() så vi kan använda de
+     * resultaten i den här metoden
+     */
     void NNPath() {
         boolean used[] = new boolean[numNodes];
         int best;
@@ -191,11 +195,19 @@ innerFor:
 
         for (int i = 1; i < numNodes; i++) {
             best = -1;
-            for (int j = 0; j < numNodes; j++) {
-                if (!used[j] && (best == -1 || 
-                            distance(tour.getNode(i-1), j) < distance(tour.getNode(i-1), best))) {
-                    best = j;
+            for (int j = 0; j < neighborsToCheck; j++) {
+                if (!used[neighbors[i][j]] && (best == -1 || 
+                            distance(tour.getNode(i-1), neighbors[i][j]) < distance(tour.getNode(i-1), best))) {
+                    best = neighbors[i][j];
+                    break;
                             }
+            }
+            if (best == -1) {
+                for (int j = 0; j < numNodes; j++) {
+                    if (!used[j] && (best == -1 || distance(tour.getNode(i-1), j) < distance(tour.getNode(i-1), best))) {
+                        best = j;
+                    }
+                }
             }
             tour.addNode(best); // should be on pos i
             used[best] = true;
