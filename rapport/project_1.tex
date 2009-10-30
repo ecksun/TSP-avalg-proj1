@@ -178,8 +178,6 @@ innebar också en smärre försämring av turernas kvalitéer. Eftersom tiden ho
 KATTIS är begränsad, valde vi att gå på denna snabbare linje.
 
 
-%%%%%%%%% TODO Börja här, Joel! %%%%%%%%%%%%%%%%
-
 \subsubsection{Programbeskrivning}
 
 \begin{algorithmic}
@@ -251,6 +249,90 @@ vår tur igen.
 Det är det andra steget i algoritmen, att skapa den minimala matchningen, som
 kräver längst tid -- nämligen $\O(n^3)$, vilket dominerar algoritmen i övrigt och
 gör den ``långsam''.
+
+
+
+\section{Diskussion}
+
+\subsection{Startheuristik}
+
+Det första vi insåg var att startalgoritmen gav stor skillnad på vårt resultat,
+trots att vi hade en fungerande 2-opt, som ska ge relativt bra resultat, fick vi
+inte alls bra approximationer. Det visade sig vara startheuristiken som var
+suboptimal. Istället för att använda sig av Nearest neighbor -- som senare
+visade sig vara mycket bättre -- använde vi den av indata givna turen. Efter att
+ha justerat detta såg vi drastiska förbättringar i resultatet.
+
+\subsection{Analys}
+
+Vi lyckades implementera alla algoritmer som vi hade tid att försöka oss på.
+Våra ursprungliga planer var att hinna implementera 3-opt men dessvärre stötte
+vi på tekniska problem vid implementeringen av 2-opt som fördröjde arbetet mer
+än vad vi hade räknat med.
+
+För tillfället skalar vårt program väldigt dåligt mot ökad storlek på
+grannlistorna, vilket också är ett resultat av förseningen vi upplevde.
+Exempelvis kördes vår kod på kattis på $2,5$ sekunder med  en granlista av
+storlek 11, ökade vi storleken 12 fick vi istället Time Limit Exceeded, vilket
+innebär att det skulle ta mer än 4 sekunder för koden att köra klart, vilket
+nästan är en fördubbling av tiden.
+
+Om vi gör samma analys på en lokal dator tar det $0,4$ sekunder att köra klart
+ett testfall vi konstruerat med 1000 noder när vi har grannlistor av storlek 15.
+Ökar vi istället storleken på grannlistorna till 20 tar det $0,5$ sekunder att
+köra klart samma test, vilket ger en helt annan bild än den vi får från Kattis.
+Sannolikt är att Kattis har hittat ett testfall som är otroligt elakt mot vår
+kod (test 40), vilket gör att tiden inte skalar linjärt mot antalet grannar.
+
+Vårt program är uppdelat i ett antal delar och i ett visst testfall med 1000
+noder som indata får vi följande resultat, där $n$ är antalet noder och $k$ är
+antalet kanter i vår grannmatris.
+
+\begin{tabular}{| l | l | r |}
+    \hline
+    Läsa in noderna                          & $\O(n)$      & 16,8 \%  \\
+    Beräkna alla kantvikter	                 & $\O(n^2)$    & 11,3 \%  \\    
+    Hitta närmaste grannarna till var nod    & $\O(n*k)$    & 7.6 \%   \\    
+    Nearest Neighbour                        & $\O(n^2)$    & 0.6 \%   \\    
+    2-opt	                                 & $\O(n^2*k)$  & 40.9 \%  \\        
+    2.5-opt	                                 & $\O(n^2*k)$  & 5,6 \%   \\        
+    Skriva ut turen	                         & $\O(n)$      & 0.6 \%   \\    
+    Övrigt	                                 & -            & 16.6 \%  \\
+    \hline
+\end{tabular}
+
+
+Vi ser att den absolut största delen av tiden går åt till 2-opt. Både den höga
+tidskomplexiteten samt det faktum att vi behöver göra väldigt många operationer
+(ändra ordning på en hel del element i vår tur) bidrar till att den tar upp så
+stor del av tiden.
+
+Att 2.5-opt går såpass fort trots tidskomplexiteten har antagligen att göra med
+att de flesta optimeringar redan är gjorde av 2-opten, som körs innan.
+
+Att beräkna alla kantvikter är relativt dyrt, men det lönar sig ganska snart då
+kantvikterna är otroligt eftertraktade. Vi ser till exempel att Nearest
+neighbour tar väldigt kort tid trots att den har kvadratisk tidskomplexitet. 
+Detta är i stort till att vi förberäknat resultaten samt även de närmaste
+grannarna. % TODO ???
+
+Framförallt tror vi att vi kan vinna ganska mycket tid genom att optimera koden rent programtekniskt, dvs utan att förändra kvaliteten på resultatet. Vi hade förhoppningen att detta skulle leda till att vi hinner med fler grannar och således får ett bättre resultat alternativt möjligheten att implementera flera optimeringsalgoritmer.
+
+\subsection{Framtida optimeringar} 
+
+Vi skulle kunna implementera en så kallad don't look bit. Om vi inte hittar
+några förbättringar för en nod och ingen av deras grannar förändrats, är det
+osannolikt att det finns fler förbättringar att göra för den noden. Listan av
+don't look-bitar innehåller just den informationen -- huruvida det hänt någon
+förändring med vår nod eller dess grannar eller ej. Men även om det minskar
+körtiden minskar det också kvaliteten på resultatet, då vi riskerar gå miste om
+optimeringar.
+
+Likaså kan man snabba upp koden med en annan datastruktur för själva turen. För
+tillfället lagrar vi turen i en vanlig vektor. Om man istället använder sig av
+en trädliknande struktur som håller koll på ordningen hos dess barn kommer
+operationen \texttt{reverse} att gå betydligt mycket fortare, vilket för
+tillfället tar upp det mesta av körtiden när vi kör 2-opt.
 
 
 
