@@ -42,7 +42,7 @@ approximativa lösningar.
 
 Problemet framträder i en rad olika skepnader, där var och en innehåller
 skiftande restriktioner. Den variant av TSP som här behandlas beskrivs genom
-punkter i planet med euklidiska avstånd och därigenom även triangelolikheten
+punkter i planet med euklidiska avstånd och därigenom är även triangelolikheten
 uppfylld.
 
 Låt $d_{ij}$ beteckna avståndet mellan städerna $t_i$ och $t_j$. Då innebär
@@ -112,6 +112,15 @@ startnod läggs hela tiden den närmsta noden till.
         \ENDFOR
     \ENDFOR
 \end{algorithmic}
+
+\subsection{Slumpmässig}
+
+Ett ytterst snabbt sätt att få fram en fungerande tur är att välja noderna i 
+samma ordning som de ligger i indata. I och med att vi inte har några krav på
+indata kan ordningen på noderna vara helt slumpmässiga, vi får alltså en 
+slumpmässig tur.
+
+Då vi måste gå igenom alla noder kommer tidskomplexiteten bli $O(n)$.
 
 
 \section{Lokal sökning (optimering)} 
@@ -235,8 +244,8 @@ Christofides algoritm har en körtid på $\O(n^3)$ och fungerar på följande vi
 Vi börjar med att skapa ett minimalt spännande träd\footnote{Ett spännande träd
 är ett träd som spänner upp alla noder i grafen, medan ett minimalt spännande
 träd är det spännande träd som har den minsta totala kantsumman.} i grafen.
-Därefter görs en matchning mellan alla noder av udda grad med minimal total
-vikt.  
+Därefter finnes den matchning mellan alla noder av udda grad som har minimal 
+total vikt.  
 
 Sedan kombineras den minimala matchningen med det minimala trädet, vars resultat
 gås igenom ända tills en Euler-cykel funnits. För att få en Euler-cykel måste vi
