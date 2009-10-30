@@ -54,7 +54,7 @@ förutsättningar minimera utrycket i (\ref{eq:tourSum}), där $n$ är det total
 antalet noder i grafen.
 
 \begin{align}
-    \sum_{i=0}^{n}{\sum_{j=0}^{n}{x_{ij} \cdot d_{ij}}},  & \\
+    \sum_{i=0}^{n}{\sum_{j=0}^{n}{x_{ij} \cdot d_{ij}}},  & 
     & x_{ij} =
     \begin{cases}
         1 & (i,j) \textrm{ tillhör turen} \\
@@ -291,7 +291,7 @@ ett testfall vi konstruerat med 1000 noder när vi har grannlistor av storlek 15
 Ökar vi istället storleken på grannlistorna till 20 tar det $0,5$ sekunder att
 köra klart samma test, vilket ger en helt annan bild än den vi får från Kattis.
 Sannolikt är att Kattis har hittat ett testfall som är otroligt elakt mot vår
-kod (test 40), vilket gör att tiden inte skalar linjärt mot antalet grannar.
+kod, vilket gör att tiden inte skalar linjärt mot antalet grannar.
 
 Vårt program är uppdelat i ett antal delar och i ett visst testfall med 1000
 noder som indata får vi följande resultat, där $n$ är antalet noder och $k$ är
@@ -299,6 +299,8 @@ antalet kanter i vår grannmatris.
 
 \begin{tabular}{| l | l | r |}
     \hline
+    Operation                               & Tidskomplexitet & Körningstid \\
+    \hline \hline
     Läsa in noderna                          & $\O(n)$      & 16,8 \%  \\
     Beräkna alla kantvikter	                 & $\O(n^2)$    & 11,3 \%  \\    
     Hitta närmaste grannarna till var nod    & $\O(n*k)$    & 7.6 \%   \\    
@@ -317,13 +319,13 @@ tidskomplexiteten samt det faktum att vi behöver göra väldigt många operatio
 stor del av tiden.
 
 Att 2.5-opt går såpass fort trots tidskomplexiteten har antagligen att göra med
-att de flesta optimeringar redan är gjorde av 2-opten, som körs innan.
+att de flesta optimeringar redan är gjorda av 2-opten, som körs innan.
 
 Att beräkna alla kantvikter är relativt dyrt, men det lönar sig ganska snart då
 kantvikterna är otroligt eftertraktade. Vi ser till exempel att Nearest
-neighbour tar väldigt kort tid trots att den har kvadratisk tidskomplexitet. 
-Detta är i stort till att vi förberäknat resultaten samt även de närmaste
-grannarna. % TODO ???
+neighbour tar väldigt kort tid trots att den har kvadratisk tidskomplexitet.
+Detta är i stort tack vare att vi förberäknat resultaten samt även de närmaste
+grannarna. 
 
 Framförallt tror vi att vi kan vinna ganska mycket tid genom att optimera koden rent programtekniskt, dvs utan att förändra kvaliteten på resultatet. Vi hade förhoppningen att detta skulle leda till att vi hinner med fler grannar och således får ett bättre resultat alternativt möjligheten att implementera flera optimeringsalgoritmer.
 
